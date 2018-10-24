@@ -21,6 +21,8 @@
    依赖注入
    面向切面编程
 
+- Spring 五种生命周期
+  singleton, prototype, request, session, global session。
 
 - ##### Spring由哪些模块组成?
 以下是Spring 框架的基本模块：
