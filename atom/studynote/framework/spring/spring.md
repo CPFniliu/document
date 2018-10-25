@@ -1,5 +1,6 @@
 ## Spring 概述
 
+<<<<<<< HEAD:atom/studynote/framework/spring/spring.md
 1. 基本
 
    ```JAVA
@@ -14,10 +15,52 @@
       }
    }
    ```
+=======
+![](../../pic/Spring Framework 结构图.png)
+1. ##### 什么是spring?
+    spring 是个Java企业级应用的开源开发框架。Spring主要用来开发Java应用，但是有些扩展是针对构建J2EE平台的web应用。Spring 框架目标是简化Java企业级应用开发，并通过POJO为基础的编程模型促进良好的编程习惯。
+
+    spring是一个解决企业应用开发的复杂性的优秀的开源框架
+    Spring是一个轻量级的控制反转（IoC）和面向切面（AOP）的容器框架
+
+- ##### spring 优点 :
+    轻量, 方便解耦，简化开发；
+    属于一个万能的框架，跟很多框架都是百搭；
+    控制反转：Spring通过控制反转实现了松散耦合，对象们给出它们的依赖，而不是创建或查找依赖的对象们。
+    面向切面的编程(AOP)：Spring支持面向切面的编程，并且把应用业务逻辑和系统服务分开。
+    容器：Spring 包含并管理应用中对象的生命周期和配置。
+    MVC框架：Spring的WEB框架是个精心设计的框架，是Web框架的一个很好的替代品。
+    事务管理：Spring 提供一个持续的事务管理接口，可以扩展到上至本地事务下至全局事务（JTA）。
+    异常处理：Spring 提供方便的API把具体技术相关的异常（比如由JDBC，Hibernate or JDO抛出的）转化为一致的unchecked 异常。
+
+- ##### 特征:
+   依赖注入
+   面向切面编程
+>>>>>>> b6f0400642e399a4a3ec0a59ed45b4a098e62e92:atom/studynote/framework/spring/spring.md
 
 - Spring 五种生命周期
   singleton, prototype, request, session, global session。
 
+<<<<<<< HEAD:atom/studynote/framework/spring/spring.md
+=======
+- ##### Spring由哪些模块组成?
+以下是Spring 框架的基本模块：
+    Core module
+    Bean module
+    Context module
+    Expression Language module
+    JDBC module
+    ORM module
+    OXM module
+    Java Messaging Service(JMS) module
+    Transaction module
+    Web module
+    Web-Servlet module
+    Web-Struts module
+    Web-Portlet module
+    aop
+    aspects
+>>>>>>> b6f0400642e399a4a3ec0a59ed45b4a098e62e92:atom/studynote/framework/spring/spring.md
 
 4. 核心容器（应用上下文) 模块。
 这是基本的Spring模块，提供spring 框架的基础功能，BeanFactory 是 任何以spring为基础的应用的核心。Spring 框架建立在此模块之上，它使Spring成为一个容器。

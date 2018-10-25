@@ -6,7 +6,11 @@
    Spring 框架的核心特性是可以用于开发任何 Java 应用程序，
    spring 是个Java企业级应用的 **轻量级** 的开源开发框架。Spring主要用来开发Java应用，但是有些扩展是针对构建J2EE平台的web应用。
    Spring 框架目标是 **简化Java企业级应用开发**，解决企业应用开发的复杂性的优秀的开源框架。并通过POJO为基础的编程模型促进良好的编程习惯。
+<<<<<<< HEAD
    Spring是一个轻量级的控制反转（IoC）和面向切面（AOP）的容器框架。其核心是Bean工厂(Bean Factory)，用以构造我们所需要的M(Model)。
+=======
+   Spring是一个轻量级的控制反转（IoC）和面向切面（AOP）的容器框架.
+>>>>>>> b6f0400642e399a4a3ec0a59ed45b4a098e62e92
 
 2. spring 优点 :
    轻量, 方便解耦，简化开发；
@@ -23,10 +27,17 @@
    面向切面编程
 
 4. Spring模块
+<<<<<<< HEAD
    ![Spring Framework 结构图](/pic/java/Spring/Spring7大模块划分.jpg)
    1. 核心容器
       核心容器由spring-core，spring-beans，spring-context，spring-context-support和spring-expression（SpEL，Spring表达式语言，Spring Expression Language）等模块组成，它们的细节如下：
 
+=======
+
+   ![Spring Framework 结构图](../../../pic/)
+   1. 核心容器
+      核心容器由spring-core，spring-beans，spring-context，spring-context-support和spring-expression（SpEL，Spring表达式语言，Spring Expression Language）等模块组成，它们的细节如下：
+>>>>>>> b6f0400642e399a4a3ec0a59ed45b4a098e62e92
       模块名称 | 模块简述
       -|-
       spring-core  | 提供了框架的基本组成部分，包括 IoC 和依赖注入功能。
@@ -38,7 +49,11 @@
    2. 其他模块
       JDBC module, ORM module, OXM module, Java Messaging Service(JMS) module, Transaction module, Web module, Web-Servlet module, Web-Struts module, Web-Portlet module, aop, aspects.
 
+<<<<<<< HEAD
    3. 七大模块划分
+=======
+   3. 七大模块
+>>>>>>> b6f0400642e399a4a3ec0a59ed45b4a098e62e92
 
       1. Spring Core： Core封装包是框架的最基础部分，提供IOC和依赖注入特性。这里的基础概念是BeanFactory，它提供对Factory模式的经典实现来消除对程序性单例模式的需要，并真正地允许你从程序逻辑中分离出依赖关系和配置。
 
@@ -59,6 +74,7 @@
    [Spring总结以及在面试中的一些问题](https://www.cnblogs.com/wang-meng/p/5701982.html)
 
 ### 二. spring
+<<<<<<< HEAD
    1. spring三大核心学习
 
       1. 控制反转(IOC : Inversion of Control)
@@ -93,3 +109,5 @@
 
    - Spring 五种生命周期
      singleton, prototype, request, session, global session。
+=======
+>>>>>>> b6f0400642e399a4a3ec0a59ed45b4a098e62e92
