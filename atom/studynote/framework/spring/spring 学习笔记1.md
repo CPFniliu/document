@@ -2,15 +2,10 @@
 ### 一. 认识Spring
 
 1. Spring概述
-
    Spring 框架的核心特性是可以用于开发任何 Java 应用程序，
    spring 是个Java企业级应用的 **轻量级** 的开源开发框架。Spring主要用来开发Java应用，但是有些扩展是针对构建J2EE平台的web应用。
    Spring 框架目标是 **简化Java企业级应用开发**，解决企业应用开发的复杂性的优秀的开源框架。并通过POJO为基础的编程模型促进良好的编程习惯。
-<<<<<<< HEAD
    Spring是一个轻量级的控制反转（IoC）和面向切面（AOP）的容器框架。其核心是Bean工厂(Bean Factory)，用以构造我们所需要的M(Model)。
-=======
-   Spring是一个轻量级的控制反转（IoC）和面向切面（AOP）的容器框架.
->>>>>>> b6f0400642e399a4a3ec0a59ed45b4a098e62e92
 
 2. spring 优点 :
    轻量, 方便解耦，简化开发；
@@ -27,34 +22,22 @@
    面向切面编程
 
 4. Spring模块
-<<<<<<< HEAD
    ![Spring Framework 结构图](/pic/java/Spring/Spring7大模块划分.jpg)
    1. 核心容器
       核心容器由spring-core，spring-beans，spring-context，spring-context-support和spring-expression（SpEL，Spring表达式语言，Spring Expression Language）等模块组成，它们的细节如下：
 
-=======
-
-   ![Spring Framework 结构图](../../../pic/)
-   1. 核心容器
-      核心容器由spring-core，spring-beans，spring-context，spring-context-support和spring-expression（SpEL，Spring表达式语言，Spring Expression Language）等模块组成，它们的细节如下：
->>>>>>> b6f0400642e399a4a3ec0a59ed45b4a098e62e92
-      模块名称 | 模块简述
-      -|-
-      spring-core  | 提供了框架的基本组成部分，包括 IoC 和依赖注入功能。
-      spring-beans | 提供 BeanFactory，工厂模式的微妙实现，它移除了编码式单例的需要，并且可以把配置和依赖从实际编码逻辑中解耦。
-      context      | 在core和 beans 模块的基础上建立起来的，它以一种类似于JNDI注册的方式访问对象。Context模块继承自Bean模块，并且添加了国际化（比如，使用资源束）、事件传播、资源加载和透明地创建上下文（比如，通过Servelet容器）等功能。Context模块也支持Java EE的功能，比如EJB、JMX和远程调用等。ApplicationContext接口是Context模块的焦点。
-      spring-context-support | 提供了对第三方库集成到Spring上下文的支持，比如缓存（EhCache, Guava, JCache）、邮件（JavaMail）、调度（CommonJ, Quartz）、模板引擎（FreeMarker, JasperReports, Velocity）等。
-      spring-expression | 模块提供了强大的表达式语言，用于在运行时查询和操作对象图。它是JSP2.1规范中定义的统一表达式语言的扩展，支持set和get属性值、属性赋值、方法调用、访问数组集合及索引的内容、逻辑算术运算、命名变量、通过名字从Spring IoC容器检索对象，还支持列表的投影、选择以及聚合等。。
+模块名称 | 模块简述
+-|-
+spring-core  | 提供了框架的基本组成部分，包括 IoC 和依赖注入功能。
+spring-beans | 提供 BeanFactory，工厂模式的微妙实现，它移除了编码式单例的需要，并且可以把配置和依赖从实际编码逻辑中解耦。
+context      | 在core和 beans 模块的基础上建立起来的，它以一种类似于JNDI注册的方式访问对象。Context模块继承自Bean模块，并且添加了国际化（比如，使用资源束）、事件传播、资源加载和透明地创建上下文（比如，通过Servelet容器）等功能。Context模块也支持Java EE的功能，比如EJB、JMX和远程调用等。ApplicationContext接口是Context模块的焦点。
+spring-context-support | 提供了对第三方库集成到Spring上下文的支持，比如缓存（EhCache, Guava, JCache）、邮件（JavaMail）、调度（CommonJ, Quartz）、模板引擎（FreeMarker, JasperReports, Velocity）等。
+spring-expression | 模块提供了强大的表达式语言，用于在运行时查询和操作对象图。它是JSP2.1规范中定义的统一表达式语言的扩展，支持set和get属性值、属性赋值、方法调用、访问数组集合及索引的内容、逻辑算术运算、命名变量、通过名字从Spring IoC容器检索对象，还支持列表的投影、选择以及聚合等。。
 
    2. 其他模块
       JDBC module, ORM module, OXM module, Java Messaging Service(JMS) module, Transaction module, Web module, Web-Servlet module, Web-Struts module, Web-Portlet module, aop, aspects.
 
-<<<<<<< HEAD
    3. 七大模块划分
-=======
-   3. 七大模块
->>>>>>> b6f0400642e399a4a3ec0a59ed45b4a098e62e92
-
       1. Spring Core： Core封装包是框架的最基础部分，提供IOC和依赖注入特性。这里的基础概念是BeanFactory，它提供对Factory模式的经典实现来消除对程序性单例模式的需要，并真正地允许你从程序逻辑中分离出依赖关系和配置。
 
       2. Spring Context: 构建于Core封装包基础上的 Context封装包，提供了一种框架式的对象访问方法，有些象JNDI注册器。Context封装包的特性得自于Beans封装包，并添加了对国际化（I18N）的支持（例如资源绑定），事件传播，资源装载的方式和Context的透明创建，比如说通过Servlet容器。
@@ -74,7 +57,6 @@
    [Spring总结以及在面试中的一些问题](https://www.cnblogs.com/wang-meng/p/5701982.html)
 
 ### 二. spring
-<<<<<<< HEAD
    1. spring三大核心学习
 
       1. 控制反转(IOC : Inversion of Control)
@@ -109,5 +91,3 @@
 
    - Spring 五种生命周期
      singleton, prototype, request, session, global session。
-=======
->>>>>>> b6f0400642e399a4a3ec0a59ed45b4a098e62e92
