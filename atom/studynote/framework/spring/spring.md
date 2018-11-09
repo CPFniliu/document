@@ -15,48 +15,47 @@
    }
    ```
 
-- Spring 五种生命周期
-  singleton, prototype, request, session, global session。
 
+      4. 核心容器（应用上下文) 模块。
+         这是基本的Spring模块，提供spring 框架的基础功能，BeanFactory 是 任何以spring为基础的应用的核心。Spring 框架建立在此模块之上，它使Spring成为一个容器。
 
-4. 核心容器（应用上下文) 模块。
-这是基本的Spring模块，提供spring 框架的基础功能，BeanFactory 是 任何以spring为基础的应用的核心。Spring 框架建立在此模块之上，它使Spring成为一个容器。
-
-5. BeanFactory – BeanFactory 实现举例。
-Bean 工厂是工厂模式的一个实现，提供了控制反转功能，用来把应用的配置和依赖从正真的应用代码中分离。
-
-最常用的BeanFactory 实现是XmlBeanFactory 类。
-
-6. XMLBeanFactory
-最常用的就是org.springframework.beans.factory.xml.XmlBeanFactory ，它根据XML文件中的定义加载beans。该容器从XML 文件读取配置元数据并用它去创建一个完全配置的系统或应用。
 
 7. 解释AOP模块
-AOP模块用于发给我们的Spring应用做面向切面的开发， 很多支持由AOP联盟提供，这样就确保了Spring和其他AOP框架的共通性。这个模块将元数据编程引入Spring。
+AOP模块用于发给我们的Spring应用做面向切面的开发， 确保了Spring和其他AOP框架的共通性。这个模块将元数据编程引入Spring。
 
 8. 解释JDBC抽象和DAO模块。
-通过使用JDBC抽象和DAO模块，保证数据库代码的简洁，并能避免数据库资源错误关闭导致的问题，它在各种不同的数据库的错误信息之上，提供了一个统一的异常访问层。它还利用Spring的AOP 模块给Spring应用中的对象提供事务管理服务。
+   保证数据库代码的简洁，
+   并能避免数据库资源错误关闭导致的问题，
+   它在各种不同的数据库的错误信息之上，提供了一个统一的异常访问层。
+   它还利用Spring的AOP 模块给Spring应用中的对象提供事务管理服务。
 
 9. 解释对象/关系映射集成模块。
-Spring 通过提供ORM模块，支持我们在直接JDBC之上使用一个对象/关系映射映射(ORM)工具，Spring 支持集成主流的ORM框架，如Hiberate,JDO和 iBATIS SQL Maps。Spring的事务管理同样支持以上所有ORM框架及JDBC。
+   Spring 通过提供ORM模块，支持我们在直接JDBC之上使用一个对象/关系映射映射(ORM)工具，
+   Spring 支持集成主流的ORM框架，如Hiberate,JDO和 iBATIS SQL Maps。
+   Spring的事务管理同样支持以上所有ORM框架及JDBC。
 
 10. 解释WEB 模块。
-Spring的WEB模块是构建在application context 模块基础之上，提供一个适合web应用的上下文。这个模块也包括支持多种面向web的任务，如透明地处理多个文件上传请求和程序级请求参数的绑定到你的业务对象。它也有对Jakarta Struts的支持。
+   Spring的WEB模块是构建在application context 模块基础之上，提供一个适合web应用的上下文。
+   这个模块也包括支持多种面向web的任务，如透明地处理多个文件上传请求和程序级请求参数的绑定到你的业务对象。它也有对Jakarta Struts的支持。
 
 12. Spring配置文件
-Spring配置文件是个XML 文件，这个文件包含了类信息，描述了如何配置它们，以及如何相互调用。
+   Spring配置文件是个XML 文件，这个文件包含了类信息，描述了如何配置它们，以及如何相互调用。
 
 13. 什么是Spring IOC 容器？
-Spring IOC 负责创建对象，管理对象（通过依赖注入（DI），装配对象，配置对象，并且管理这些对象的整个生命周期。
+   Spring IOC 负责创建对象，管理对象（通过依赖注入（DI），装配对象，配置对象，
+   并且管理这些对象的整个生命周期。
 
 14. IOC的优点是什么？
-IOC 或 依赖注入把应用的代码量降到最低。它使应用容易测试，单元测试不再需要单例和JNDI查找机制。最小的代价和最小的侵入性使松散耦合得以实现。IOC容器支持加载服务时的饿汉式初始化和懒加载。
+   IOC 或 依赖注入把应用的代码量降到最低。它使应用容易测试，单元测试不再需要单例和JNDI查找机制。
+   最小的代价和最小的侵入性使松散耦合得以实现。IOC容器支持加载服务时的饿汉式初始化和懒加载。
 
 15. ApplicationContext通常的实现是什么?
-FileSystemXmlApplicationContext ：此容器从一个XML文件中加载beans的定义，XML Bean 配置文件的全路径名必须提供给它的构造函数。
-ClassPathXmlApplicationContext：此容器也从一个XML文件中加载beans的定义，这里，你需要正确设置classpath因为这个容器将在classpath里找bean配置。
-WebXmlApplicationContext：此容器加载一个XML文件，此文件定义了一个WEB应用的所有bean。
+   FileSystemXmlApplicationContext ：此容器从一个XML文件中加载beans的定义，XML Bean 配置文件的全路径名必须提供给它的构造函数。
+   ClassPathXmlApplicationContext：此容器也从一个XML文件中加载beans的定义，这里，你需要正确设置classpath因为这个容器将在classpath里找bean配置。
+   WebXmlApplicationContext：此容器加载一个XML文件，此文件定义了一个WEB应用的所有bean。
+
 16. Bean 工厂和 Application contexts 有什么区别？
-Application contexts提供一种方法处理文本消息，一个通常的做法是加载文件资源（比如镜像），它们可以向注册为监听器的bean发布事件。另外，在容器或容器内的对象上执行的那些不得不由bean工厂以程序化方式处理的操作，可以在Application contexts中以声明的方式处理。Application contexts实现了MessageSource接口，该接口的实现以可插拔的方式提供获取本地化消息的方法。
+   Application contexts提供一种方法处理文本消息，一个通常的做法是加载文件资源（比如镜像），它们可以向注册为监听器的bean发布事件。另外，在容器或容器内的对象上执行的那些不得不由bean工厂以程序化方式处理的操作，可以在Application contexts中以声明的方式处理。Application contexts实现了MessageSource接口，该接口的实现以可插拔的方式提供获取本地化消息的方法。
 
 17. 一个Spring的应用看起来象什么？
 一个定义了一些功能的接口。
@@ -498,7 +497,7 @@ public class AppConfig  {
     <!-- map all requests for /app/* to the dispatcher servlet -->    
     <servlet-mapping>    
         <servlet-name>dispatcher</servlet-name>    
-        <url-pattern>/app/*</url-pattern>    
+        <url-pattern>/app/* </url-pattern>    
     </servlet-mapping>    
 </web-app    
 

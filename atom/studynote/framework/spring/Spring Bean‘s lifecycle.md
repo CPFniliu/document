@@ -2,7 +2,7 @@
 
 在Spring中，我们可以从两个层面定义Bean的生命周期：第一个层面是Bean的作用范围(Singleton、Prototype以及Web中的Request、Session和global session)，第二个层面是实例化Bean时所经历的一系列阶段。
 
-### BeanFactory 和 ApplicationContex 的区别
+### BeanFactory 和 ApplicationContext 的区别
 BeanFactory 和 ApplicationContext 的一个大的区别是：BeanFactory 在初始化容器时，并未实例化Bean，直到第一次访问某个Bean时才实例目标 Bean；而 ApplicationContext 则在初始化应用上下文时就实例化所有单实例的 Bean。
 ApplicationContext会利用Java反射机制自动识别出配置文件中定义的 BeanPostProcessor、InstantiationAwareBeanPostProcessor 和 BeanFactoryPostProcessor，并将它们自动注册到应用上下文中；而BeanFactory需要我们手工调用 addBeanPostProcessor() 方法进行注册.下面我们来看一下 ApplicationContext 中 Bean 的生命周期的图示：
 
@@ -25,19 +25,18 @@ ApplicationContext会利用Java反射机制自动识别出配置文件中定义�
    2. 执行 bean 的构造器。
    3. instantiationAwareBeanPostProcessor.postProcessPropertyValues();
    4. 为 Bean 注入属性。
-
-3. BeanPostProcessor的调用
-   1. BeanNameAware.setBeanName();
+   5. BeanNameAware.setBeanName();
       BeanFactoryAware.setBeanFactory();
       ApplicationContextAware.setApplicationContext();
       ResourceLoaderAware.setResourceLoader();
       ServletContextAware.setServletContextAware();
 
-   2. BeanPostProcessor.postProcessBeforeInitialization(Object o, String s);
-   3. InitializingBean.afterPropertiesSet();
-   4. 调用 <bean> 的 init-method 属性指定的初始化方法。
-   5. BeanPostProcessor.postProcessAfterInitialization(Object o, String s);
-   6. instantiationAwareBeanPostProcessor.postProcessAfterInitialization(Object o, String s);
+3. BeanPostProcessor的调用
+   1. BeanPostProcessor.postProcessBeforeInitialization(Object o, String s);
+   2. InitializingBean.afterPropertiesSet();
+   3. 调用 <bean> 的 init-method 属性指定的初始化方法。
+   4. BeanPostProcessor.postProcessAfterInitialization(Object o, String s);
+   5. instantiationAwareBeanPostProcessor.postProcessAfterInitialization(Object o, String s);
 
    如果在<bean>中指定Bean的作用范围为scope=“prototype”，将Bean返回给调用者，调用者负责Bean后续生命周期的管理，Spring不再管理这个Bean的生命周期。如果作用范围设置为scope=“singleton”，则将Bean放入到Spring IoC容器的缓存池中，并将Bean的应用返回给调用者，Spring继续对这些Bean进行后续的生命管理。
    ---正常执行---
@@ -69,7 +68,8 @@ Bean的完整生命周期经历了各种方法调用，这些方法可以划分�
    用户可以使用该方法对某些Bean进行特殊的处理，甚至改变Bean的行为，BeanPostProcessor在Spring框架中占有重要的地位，为容器提供对Bean进行后续加工处理的切入点，Spring容器所提供的各种“神奇功能”(如果AOP、动态代理等)都通过BeanPostProcessor实施；
 
 #### BeanFactoryPostProcessor 和 BeanPostProcessor
-      >[Spring的BeanFactoryPostProcessor 和 BeanPostProcessor](https://blog.csdn.net/caihaijiang/article/details/35552859?utm_source=blogxgwz3)
+   > [Spring的BeanFactoryPostProcessor和BeanPostProcessor](https://blog.csdn.net/caihaijiang/article/details/35552859?utm_source=blogxgwz3)
+
 
 ---
 #### BeanNameAware & BeanFactoryAware & ApplicationContextAware & ResourceLoaderAware & ServletContextAware

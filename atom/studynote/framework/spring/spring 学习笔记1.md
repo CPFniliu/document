@@ -38,11 +38,11 @@ spring-expression | 模块提供了强大的表达式语言，用于在运行时
       JDBC module, ORM module, OXM module, Java Messaging Service(JMS) module, Transaction module, Web module, Web-Servlet module, Web-Struts module, Web-Portlet module, aop, aspects.
 
    3. 七大模块划分
-      1. Spring Core： Core封装包是框架的最基础部分，提供IOC和依赖注入特性。这里的基础概念是BeanFactory，它提供对Factory模式的经典实现来消除对程序性单例模式的需要，并真正地允许你从程序逻辑中分离出依赖关系和配置。
+      1. Spring  Core ： Core封装包是框架的最基础部分，提供IOC和依赖注入特性。这里的基础概念是BeanFactory，它提供对Factory模式的经典实现来消除对程序性单例模式的需要，并真正地允许你从程序逻辑中分离出依赖关系和配置。
 
-      2. Spring Context: 构建于Core封装包基础上的 Context封装包，提供了一种框架式的对象访问方法，有些象JNDI注册器。Context封装包的特性得自于Beans封装包，并添加了对国际化（I18N）的支持（例如资源绑定），事件传播，资源装载的方式和Context的透明创建，比如说通过Servlet容器。
+      2. Spring  Context : 构建于Core封装包基础上的 Context 封装包，提供了一种框架式的对象访问方法，有些象JNDI注册器。Context封装包的特性得自于Beans封装包，并添加了对国际化（I18N）的支持（例如资源绑定），事件传播，资源装载的方式和Context的透明创建，比如说通过Servlet容器。
 
-      3. Spring DAO:  DAO (Data Access Object)提供了JDBC的抽象层，它可消除冗长的JDBC编码和解析数据库厂商特有的错误代码。 并且，JDBC封装包还提供了一种比编程性更好的声明性事务管理方法，不仅仅是实现了特定接口，而且对所有的POJOs（plain old Java objects）都适用。
+      3. Spring DAO:  DAO (Data Access Object)提供了JDBC的抽象层，它可消除冗长的JDBC编码和解析数据库厂商特有的错误代码。 并且，JDBC封装包还提供了一种比编程性更好的声明性事务管理方法，不仅仅是实现了特定接口，而且对所有的POJOs（ plain  old Java objects）都适用。
 
       4. Spring ORM: ORM 封装包提供了常用的“对象/关系”映射APIs的集成层。 其中包括JPA、JDO、Hibernate 和 iBatis 。利用ORM封装包，可以混合使用所有Spring提供的特性进行“对象/关系”映射，如前边提到的简单声明性事务管理。
 
@@ -86,8 +86,48 @@ spring-expression | 模块提供了强大的表达式语言，用于在运行时
 
    - 依赖注入（DI）的三种方式，分别为：
       1. 接口注入.
-      2. Setter方法注入.
-      3. 构造方法注入.
+         接口注入模式因为具备侵入性，它要求组件必须与特定的接口相关联，因此并不被看好，实际使用有限。
+      2. 构造方法注入.
+         1、“**在构造期即创建一个完整、合法的对象**”，对于这条Java设计原则，Type2无疑是最好的响应者。
+         2、避免了繁琐的setter方法的编写，所有依赖关系均在构造函数中设定，依赖关系集中呈现，更加易读。
+         3、由于没有setter方法，依赖关系在构造时由容器一次性设定，因此组件在被创建之后即处相对“不变”的稳定状态，无需担心上层代码在调用过程中执行setter方法对组件依赖关系产生破坏，特别是对于Singleton模式的组件而言，这可能对整个系统产生重大的影响。
+         4、同样，由于关联关系仅在构造函数中表达，只有组件创建者需要关心组件内部的依赖关系。对调用者而言，组件中的依赖关系处于黑盒之中。对上层屏蔽不必要的信息，也为系统的层次清晰性提供了保证。
+         5、通过构造子注入，意味着我们可以在构造函数中决定依赖关系的注入顺序，对于一个大量依赖外部服务的组件而言，依赖关系的获得顺序可能非常重要，比如某个依赖关系注入的先决条件是组件的DataSource及相关资源已经被设定。
+      3. Setter方法注入.
+         1、对于习惯了传统JavaBean开发的程序员而言，通过setter方法设定依赖关系显得更加直观，更加自然。
+         2、如果依赖关系（或继承关系）较为复杂，那么Type2模式的构造函数也会相当庞大（我们需要在构造函数中设定所有依赖关系），此时Type3模式往往更为简洁。
+         3、对于某些第三方类库而言，可能要求我们的组件必须提供一个默认的构造函数（如Struts中的Action），此时Type2类型的依赖注入机制就体现出其局限性，难以完成我们期望的功能。
+      >构造方法注入和Setter方法注入模式各有千秋，而Spring、PicoContainer都对构造方法注入和Setter方法注入类型的依赖注入机制提供了良好支持。这也就为我们提供了更多的选择余地。理论上，以构造方法注入类型为主，辅之以Setter方法注入类型机制作为补充，可以达到最好的依赖注入效果，不过对于基于Spring Framework开发的应用而言，Setter方法注入使用更加广泛。
 
-   - Spring 五种生命周期
+#### Spring 五种生命周期
      singleton, prototype, request, session, global session。
+![Spring中Bean的五大作用域](../../../pic/java/Spring/Spring Bean 作用域.png)
+
+类别 | 说明 | 使用相关
+-|-
+singleton | 单例模式，在整个Spring IoC容器中，使用singleton定义的Bean将只有一个实例
+prototype | 原型模式，每次通过容器的getBean方法获取 prototype 定义的Bean时，都将产生一个新的Bean实例
+request | 对于每次HTTP请求，使用request定义的Bean都将产生一个新实例，即每次HTTP请求将会产生不同的Bean实例。| 只有在Web应用中使用Spring时，该作用域才有效(仅适用于WebApplicationContext环境)
+session | 对于每次HTTP Session，使用 session 定义的Bean都将产生一个新实例。| ^
+global session | 每个全局的HTTP Session，使用session定义的Bean都将产生一个新实例。典型情况下，仅在使用portlet context的时候有效。| ^
+自定义的Scope | --- | ---
+
+#### JavaBean 和 Spring Bean 的 区别
+   - java bean的描述
+      1. JavaBean是一个普通的对象类，该类必须有一个无参构造。
+      2. JavaBean的所有属性必须进行get/set封装，如果是bool属性，则需要用is进行封装。
+   - java bean的作用域
+      page : 作用域为当前页面
+      request : 浏览器当次请求服务器所涉及的服务器资源，包含forward（请求转发）和include（包含）
+      session : 浏览器和服务器的本次会话期间，所有涉及到的资源。
+      application : 服务器的启动和关闭的整段时间。
+   - Spring Bean
+      在Spring中，**那些组成应用程序的主体及由 Spring IoC 容器所管理的对象，被称之为bean。** 简单地讲，bean就是由IoC容器初始化、装配及管理的对象，除此之外，bean就与应用程序中的其他对象没有什么区别了。而bean的定义以及bean相互间的依赖关系将通过配置元数据来描述。
+   - 传统javabean更多地作为值传递参数，而spring中的bean用处几乎无处不在，任何组件都可以被称为bean。
+   写法不同：传统javabean作为值对象，要求每个属性都提供getter和setter方法；但spring中的bean只需为接受设值注入的属性提供setter方法。
+   生命周期不同：传统javabean作为值对象传递，不接受任何容器管理其生命周期；spring中的bean有spring管理其生命周期行为。
+   所有可以被spring容器实例化并管理的java类都可以称为bean。
+   javabean来管理对象，方便数据传递和对象管理。
+   spring中的bean，是通过配置文件、javaconfig等的设置，有spring自动实例化，用完后自动销毁的对象。让我们只需要在用的时候使用对象就可以，不用考虑如果创建类对象（这就是spring的注入）。一般是用在服务器端代码的执行上。 望采纳！！！
+
+>[Spring中Bean的五大作用域及其生命周期](https://blog.csdn.net/qq_40587575/article/details/80007257)
