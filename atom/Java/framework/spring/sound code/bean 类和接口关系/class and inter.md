@@ -1,0 +1,30 @@
+
+
+
+BeanDefinitionRegistry ，该类的作用主要是向注册表中注册 BeanDefinition 实例，完成 注册的过程。
+
+
+
+
+
+
+
+
+#### [ListableBeanFactory源码](https://blog.csdn.net/u013412772/article/details/80819314)
+ListableBeanFactory获取bean时,Spring 鼓励使用这个接口定义的api. 还有个Beanfactory方便使用.其他的4个接口都是不鼓励使用的.
+
+提供容器中bean迭代的功能,不再需要一个个bean地查找.比如可以一次获取全部的bean(太暴力了),根据类型获取bean.在看SpringMVC时,扫描包路径下的具体实现策略就是使用的这种方式(那边使用的是BeanFactoryUtils封装的api).
+
+如果同时实现了HierarchicalBeanFactory,返回值不会考虑父类BeanFactory,只考虑当前factory定义的类.当然也可以使用BeanFactoryUtils辅助类来查找祖先工厂中的类. 即ListableBeanFactory是beanFactory接口的扩展接口，它可以枚举所有的bean实例，而不是客户端通过名称一个一个的查询得出所有的实例。要预加载所有的bean定义的beanfactory可以实现这个接口来。该 接口定义了访问容器中Bean基本信息的若干方法，如查看Bean的个数、获取某一类型Bean的配置名、查看容器中是否包括某一Bean等方法.
+
+这个接口中的方法只会考虑本factory定义的bean.这些方法会忽略ConfigurableBeanFactory的registerSingleton注册的单例bean(getBeanNamesOfType和getBeansOfType是例外,一样会考虑手动注册的单例).当然BeanFactory的getBean一样可以透明访问这些特殊bean.当然在典型情况下,所有的bean都是由external bean定义,所以应用不需要顾虑这些差别.
+
+注意:getBeanDefinitionCount和containsBeanDefinition的实现方法因为效率比较低,还是少用为好.
+
+　　1. 3个跟BeanDefinition有关的总体操作。包括BeanDefinition的总数、名字的集合、指定类型的名字的集合。（这里指出，BeanDefinition是Spring中非常重要的一个类，每个BeanDefinition实例都包含一个类在Spring工厂中所有属性。）
+　　2. 2个getBeanNamesForType重载方法。根据指定类型（包括子类）获取其对应的所有Bean名字。
+　　3. 2个getBeansOfType重载方法。根据类型（包括子类）返回指定Bean名和Bean的Map。
+　　4. 2个跟注解查找有关的方法。根据注解类型，查找Bean名和Bean的Map。以及根据指定Bean名和注解类型查找指定的Bean。
+
+总结：
+　　正如这个工厂接口的名字所示，这个工厂接口最大的特点就是可以列出工厂可以生产的所有实例。当然，工厂并没有直接提供返回所有实例的方法，也没这个必要。它可以返回指定类型的所有的实例。而且你可以通过getBeanDefinitionNames()得到工厂所有bean的名字，然后根据这些名字得到所有的Bean。这个工厂接口扩展了BeanFactory的功能，作为上文指出的BeanFactory二级接口，有9个独有的方法，扩展了跟BeanDefinition的功能，提供了BeanDefinition、BeanName、注解有关的各种操作。它可以根据条件返回Bean的集合，这就是它名字的由来——ListableBeanFactory。

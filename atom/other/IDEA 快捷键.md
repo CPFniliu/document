@@ -30,7 +30,7 @@ Alt+Shift+Up/Down，上/下移一行
 Shift+F6，重构 – 重命名
 Ctrl+X，删除行
 Ctrl+D，复制行
-Ctrl+/或Ctrl+Shift+/，注释（//或者/**/）
+Ctrl+/或Ctrl+Shift+/，注释（//或者）
 Ctrl+J，自动代码（例如：serr）
 Ctrl+Alt+J，用动态模板环绕
 Ctrl+H，显示类结构图（类的继承层次）
@@ -131,6 +131,9 @@ Ctrl+Shift+F，在路径中查找
 Ctrl+Shift+R，在路径中替换
 Ctrl+Shift+S，搜索结构
 Ctrl+Shift+M，替换结构
+
+
+### 用法
 Alt+F7，查找用法
 Ctrl+Alt+F7，显示用法
 Ctrl+F7，在文件中查找用法

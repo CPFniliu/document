@@ -4,7 +4,7 @@
 #### 列名和属性名不一致的情况
 
    plan1. 数据库查询起别名
-   plan2. 使用 resultMap
+   plan2. 使用 resultMapa
 
 
 #### 定义别名、
