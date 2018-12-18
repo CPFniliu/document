@@ -1,7 +1,8 @@
-### 1. 分析，建立数据库。
+# 1. 分析，建立数据库。
+
 执行sql脚本
 
-### 2. 集成springMVC。
+# 2. 集成springMVC
 
    1. 在pom.xml中添加相关依赖
     添加 spring-mvc，servlet-api，jstl。

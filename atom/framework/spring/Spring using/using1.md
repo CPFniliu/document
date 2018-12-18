@@ -1,5 +1,7 @@
-#### Bean 中 id 和 name的区别  
-1. id属性命名必须满足XML的命名规范，因为id其实是XML中就做了限定的。总结起来就相当于一个Java变量的命名：不能以数字，符号打头，不能有空格，如123，?ad,"ab "等都是不规范的，Spring在初始化时就会报错，诸如：  
+
+# Bean 中 id 和 name的区别 
+
+1. id属性命名必须满足XML的命名规范，因为id其实是XML中就做了限定的。总结起来就相当于一个Java变量的命名：不能以数字，符号打头，不能有空格，如123，?ad,"ab "等都是不规范的，Spring在初始化时就会报错，诸如:
 `org.xml.sax.SAXParseException: Attribute value "?ab" of type ID must be a name.`
 
 2. name属性则没有这些限定，你可以使用几乎任何的名称，如?ab,123等，但不能带空格，如"a b"," abc"，，这时，虽然初始化时不会报错，但在getBean()则会报出诸如以下的错误：  
@@ -17,25 +19,26 @@ getBean("com.stamen.BeanLifeCycleImpl")返回该实例。
 
 7. 如果存在多个id和name都没有指定，且实例类都一样的<bean>，如:  
 ```xml
-<bean class="com.stamen.BeanLifeCycleImpl"/>    
-<bean class="com.stamen.BeanLifeCycleImpl"/>    
+<bean class="com.stamen.BeanLifeCycleImpl"/>
+<bean class="com.stamen.BeanLifeCycleImpl"/>
 <bean class="com.stamen.BeanLifeCycleImpl"/>
 ```
 则第一个bean通过getBean("com.stamen.BeanLifeCycleImpl")获得，  
 第二个bean通过getBean("com.stamen.BeanLifeCycleImpl#1")获得，  
 第三个bean通过getBean("com.stamen.BeanLifeCycleImpl#2")获得，以此类推。  
 
-#### [Bean 为Bean注入日期类型](https://blog.csdn.net/u013216156/article/details/78626440)
-```xml
-	<bean id="yMd_hm" class="java.text.SimpleDateFormat" >
-		<constructor-arg value="yyyy-MM-dd hh:mm"></constructor-arg>
-	</bean>
+# [Bean 为Bean注入日期类型](https://blog.csdn.net/u013216156/article/details/78626440)
 
-	<bean class="cn.cpf.test.beans.Student" id="xiaoming" name="student">
-		<property name="birthday">
-			<bean factory-bean="yMd_hm" factory-method="parse">
-				<constructor-arg value="2018-12-5 15:48"></constructor-arg>
-			</bean>
-		</property>
-	</bean>
+```xml
+<bean id="yMd_hm" class="java.text.SimpleDateFormat">
+    <constructor-arg value="yyyy-MM-dd hh:mm"></constructor-arg>
+</bean>
+
+<bean class="cn.cpf.test.beans.Student" id="xiaoming" name="student">
+    <property name="birthday">
+        <bean factory-bean="yMd_hm" factory-method="parse">
+            <constructor-arg value="2018-12-5 15:48"></constructor-arg>
+        </bean>
+    </property>
+</bean>
 ```
