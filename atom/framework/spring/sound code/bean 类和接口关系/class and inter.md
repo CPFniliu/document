@@ -1,5 +1,10 @@
 
-
+1. AbstractApplicationContext
+2. AbstractRefreshableApplicationContext
+3. AbstractRefreshableConfigApplicationContext
+4. AbstractXmlApplicationContext
+5. FileSystemXmlApplicationContext
+   
 
 BeanDefinitionRegistry ，该类的作用主要是向注册表中注册 BeanDefinition 实例，完成 注册的过程。
 

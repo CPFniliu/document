@@ -18,6 +18,7 @@
 ```
 
 #### serialVersionUID
+
 作用 : 取消强制划分版本, 使得不同版本中的class能够反序列化成功.
 
 Java的序列化机制是通过判断类的serialVersionUID来验证版本一致性的。
