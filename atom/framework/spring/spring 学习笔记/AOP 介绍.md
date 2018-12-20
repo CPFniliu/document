@@ -1,5 +1,7 @@
 # AOP 相关
 
+[TOC]
+
 ## 基本概念
 
 切面（Aspect）：官方的抽象定义为“一个关注点的模块化，这个关注点可能会横切多个对象”。“切面”在ApplicationContext中\<aop:aspect\>来配置。
@@ -23,11 +25,13 @@ AOP代理（AOPProxy）：在SpringAOP中有两种代理方式，JDK动态代理
 
 ### 五种 Advice
 
-   Before
-   After
-   Around
-   AfterReturning
-   AfterThrowing
+   前置通知（Before advice）：在某连接点之前执行的通知，但这个通知不能阻止连接点之前的执行流程（除非它抛出一个异常）。
+   后置通知（After returning advice）：在某连接点正常完成后执行的通知：例如，一个方法没有抛出任何异常，正常返回。
+   异常通知（After throwing advice）：在方法抛出异常退出时执行的通知。
+   最终通知（After (finally) advice）：当某连接点退出的时候执行的通知（不论是正常返回还是异常退出）。
+   环绕通知（Around Advice）：包围一个连接点的通知，如方法调用。这是最强大的一种通知类型。环绕通知可以在方法调用前后完成自定义的行为。它也会选择是否继续执行连接点或直接返回它自己的返回值或抛出异常来结束执行。
+
+   通知方法中可以没有参数, 也可以加一个 JoinPoint 类型的参数用于获取调用代理对象方法的参数信息.
 
    ```java
    //配置切入点,该方法无方法体,主要为方便同类中其他方法使用此处配置的切入点
@@ -71,26 +75,54 @@ AOP代理（AOPProxy）：在SpringAOP中有两种代理方式，JDK动态代理
    }
    ```
 
-```java
-```
-```java
-```
-```java
-```
-```java
-```
-```java
-```
+### AOP执行顺序
 
+#### 通知的执行顺序
 
+- 基于 xml 配置 :
+   xml的配置通知的顺序决定了执行的顺序, 配在前面的通知先执行.
+- 基于 annotation :
+   使用注解的情况下, Advices 执行顺序与类种方法排序无关
+   正常情况下执行顺序：
+      `around start -> before ->around end -> after -> afterreturning`
+   异常情况下执行顺序
+      `around start -> before -> around throwable -> after -> afterthrowing`
+
+#### 多切面的执行顺序
+
+order 属性 : 一个代理对象, 被多个切面类切入的话, 可以通过设置order属性来配置它们的执行顺序.
+order 属性是一个整数, 每个切面默认的 Order 是整数的最大值.
+
+1. order 值不等时
+  (同心圆原理, 要执行的方法为圆心，最外层的order最小) 在执行被代理的目标方法之前, order较小的先执行, 在执行被代理的目标方法后order较大的先执行.
+  
+2. order 值相等时
+   - 基于 xml
+      xml配置中较前的那个先执行
+   - 基于 annotation
+      似乎是通过全类名(不太确定, 这个, 但是可以确定不是通过bean的id名)
 
 ### Pointcut-execution表达式
 
    > 官方文档 https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#aop
 
+   在AspectJ中，切入点表达式可以通过 “&&”、“||”、“!”等操作符结合起来。
+
+   格式
+
    ```java
       execution(modifiers-pattern? ret-type-pattern declaring-type-pattern?name-pattern(param-pattern) throws-pattern?)
+      execution([权限修饰符] [返回值类型] [简单类名/全类名] [方法名]([参数列表]))
+   ```
+
+   示例
+
+   ```java
+      execution(public int cn.cpf.aop.xml.ProxyObject.execute(String, int))
       execution(* cn.cpf..*.*(..))
+      execution(* *.*(..))
+      // 任意类中第一个参数为int类型的add方法或sub方法
+      execution (* *.add(int,..)) || execution(* *.sub(int,..))
    ```
 
    标识符 | 含义
@@ -127,6 +159,13 @@ AOP代理（AOPProxy）：在SpringAOP中有两种代理方式，JDK动态代理
    属性值为 true 和 false, true 表示就通过一个ThreadLocal保存代理
 
    是否暴露当前代理对象为ThreadLocal模式。
+
+## 代理过程
+
+   spring 代理 分为 JDK 代理, 和 CGlib 动态代理,
+   可以通过 proxy-target-class 进行配置, 为true则是基于类的代理将起作用（需要cglib库），为false或者省略这个属性，则会使用标准的JDK 基于接口的代理。
+   如果没有配置 proxy-target-class 属性, spring默认走JDK 代理.
+   但无论如何配置如果代理对象没有实现接口，spring会自动使用CGLIB代理。
 
 ## AOP 使用
 
@@ -178,17 +217,6 @@ AOP代理（AOPProxy）：在SpringAOP中有两种代理方式，JDK动态代理
       <bean id="xmlProxy2" class="cn.cpf.aop.xml.XmlProxy2"></bean>
       <!-- 代理对象 -->
       <bean id="proxyDemo" class="cn.cpf.aop.xml.ProxyDemo"></bean>
-
-      <!-- 代理配置 -->
-      <aop:config proxy-target-class="true">
-         <!-- 代理 切面 表达式 -->
-         <aop:pointcut expression="execution(* cn.cpf.aop.xml.UserServiceImpl.insert(..))" id="aop1" />
-         <!-- 设置代理类 -->
-         <aop:aspect ref = "xmlProxy">
-               <!-- 设置代理方法 -->
-               <aop:before method="startTransaction" pointcut-ref="aop1" />
-         </aop:aspect>
-      </aop:config>
 
       <!-- 代理配置 -->
       <aop:config proxy-target-class="true">
@@ -255,10 +283,10 @@ AOP代理（AOPProxy）：在SpringAOP中有两种代理方式，JDK动态代理
       public void around(ProceedingJoinPoint pjp) {
          println(" around start ");
          try {
-               pjp.proceed();
+            pjp.proceed();
          } catch (Throwable throwable) {
-               println(" around throwable ");
-               throwable.printStackTrace();
+            println(" around throwable ");
+            throwable.printStackTrace();
          }
          println(" around end ");
       }
@@ -269,7 +297,7 @@ AOP代理（AOPProxy）：在SpringAOP中有两种代理方式，JDK动态代理
    public class XmlProxy1 extends XmlProxy {
       @Override
       protected void println(String string) {
-         System.err.println("XmlProxy 1 == " + string);
+         LoggerUtils.logInfo("XmlProxy 1 == " + string);
       }
    }
 
@@ -278,7 +306,28 @@ AOP代理（AOPProxy）：在SpringAOP中有两种代理方式，JDK动态代理
    public class XmlProxy2 extends XmlProxy{
       @Override
       protected void println(String string) {
-         System.out.println("XmlProxy 2 == " + string);
+         LoggerUtils.logInfo("XmlProxy 2 == " + string);
+      }
+   }
+   ```
+
+- 代理对象
+
+   ```java
+   package cn.cpf.aop.xml;
+
+   import cn.cpf.aop.common.LoggerUtils;
+
+   public class ProxyDemo implements IProxyDemoService {
+
+      @Override
+      public void testProxy1() {
+         LoggerUtils.logInfo("执行 testProxy1 方法");
+      }
+
+      @Override
+      public void testProxy2() {
+         LoggerUtils.logInfo("执行 testProxy2 方法");
       }
    }
    ```
@@ -292,6 +341,10 @@ AOP代理（AOPProxy）：在SpringAOP中有两种代理方式，JDK动态代理
       proxyDemoService.testProxy1();
    }
    ```
+
+   > 通过getBean 获取Bean时, 若该Bean配置了AOP代理, 则返回的是代理对象
+   > 注意返回的对象, 如果是走的是JDK代理, 则返回的是JDK代理对象, 需要用接口进行接受返回的值, 否则会因为无法转换而抛出异常.
+   > 若是使用的是CGlib代理的话, 可以用接口(如果有的话) 和实体类进行接受.
 
 - 输出
 
@@ -309,17 +362,9 @@ AOP代理（AOPProxy）：在SpringAOP中有两种代理方式，JDK动态代理
    00:52:22.869 [main] INFO cn.cpf.aop.xml.LoggerUtils - XmlProxy 1 ==  afterReturn
    ```
 
-- 分析(基于xml配置, spring5.0版本)
-   1. 对于一个切面来说, xml种的配置通知的顺序决定了执行的顺序, 配在前面的通知先执行.
-   2. 对于多个切面来说, order属性可以决定执行顺序.
-      - 在执行被代理的目标方法之前, order较小的先执行, 在执行被代理的目标方法后order较大的先执行.
-      - 若没有设置order属性, 或者order属性值相等, 那么在xml配置中较前的那个先执行.
+### besed on annotation
 
-### annotation
-
-1. 注解配置(xml)
-   - 在xml文件中声明激活自动扫描组件功能，
-   - 同时激活自动代理功能（来测试AOP的注解功能）
+- 注解配置(xml)
 
    ```xml
    <?xml version="1.0" encoding="UTF-8"?>
@@ -337,81 +382,159 @@ AOP代理（AOPProxy）：在SpringAOP中有两种代理方式，JDK动态代理
 
       <!-- 配置注解扫面路径 -->
       <context:component-scan base-package="cn.cpf" />
-      <!-- 开启注解 -->
-      <context:annotation-config />
       <!-- 开启aspectj代理 -->
       <aop:aspectj-autoproxy />
    </beans>
    ```
 
-2. Aspect 切面类添加注解(java)
+- 代理类接口（JDK代理使用）
 
    ```java
-   //声明这是一个组件
-   @Component
-   //声明这是一个切面 Bean
-   @Aspect
-   public class AnnotaionAspect {
+   package cn.cpf.aop.annotation;
 
-      private final static Logger log = Logger.getLogger(String.valueOf(AnnotaionAspect.class));
+   public interface IAopAnnotation {
 
-      //配置切入点,该方法无方法体,主要为方便同类中其他方法使用此处配置的切入点
-      @Pointcut("execution(* com.gupaoedu.aop.service..*(..))")
-      public void aspect(){ }
+      void testProxy1();
 
-      /*
-      * 配置前置通知,使用在方法 aspect()上注册的切入点同时接受 JoinPoint 切入点对象,可以没有该参数
-      */
-      @Before("aspect()")
-      public void before(JoinPoint joinPoint){
-         log.info("before " + joinPoint);
-      }
-
-      //配置后置通知,使用在方法 aspect()上注册的切入点
-      @After("aspect()")
-      public void after(JoinPoint joinPoint){
-         log.info("after " + joinPoint);
-      }
-
-      //配置环绕通知,使用在方法 aspect()上注册的切入点
-      @Around("aspect()")
-      public void around(JoinPoint joinPoint){
-         long start = System.currentTimeMillis();
-         try {
-            ((ProceedingJoinPoint) joinPoint).proceed();
-            long end = System.currentTimeMillis();
-            log.info("around " + joinPoint + "\tUse time : " + (end - start) + " ms!");
-         } catch (Throwable e) {
-            long end = System.currentTimeMillis();
-            log.info("around " + joinPoint + "\tUse time : " + (end - start) + " ms with exception : " + e.getMessage());
-         }
-      }
-
-      //配置后置返回通知,使用在方法 aspect()上注册的切入点
-      @AfterReturning("aspect()")
-      public void afterReturn(JoinPoint joinPoint){
-         log.info("afterReturn " + joinPoint);
-      }
-
-      //配置抛出异常后通知,使用在方法 aspect()上注册的切入点
-      @AfterThrowing(pointcut="aspect()", throwing="ex")
-      public void afterThrow(JoinPoint joinPoint, Exception ex){
-         log.info("afterThrow " + joinPoint + "\t" + ex.getMessage());
-      }
+      void testProxy2();
    }
    ```
 
-3. 测试
-   ...
+- Aspect 切面类添加注解(java)
 
-4. 分析执行顺序
-   - 正常执行
-      所有通知order一样，执行顺序：around start -> before ->around start -> afterreturning -> after
-      before.order < around.order，执行顺序： before -> around start
-      afterreturning.order > around.order，执行顺序：afterreturning -> around end
-      after.order > around.order，执行顺序：after -> around end
-      after.order >afterreturning.order，执行顺序： after -> afterreturning
-   2、异常情况
-      所有通知order一样，执行顺序：around start -> before ->  afterthrowing -> after
-      before.order < around.order，执行顺序： before -> around start
-      after.order > afterthrowing .order，执行顺序：after -> afterthrowing
+   ```java
+   // 代理抽象类, 为了减少代码量便于查看
+   package cn.cpf.aop.annotation;
+
+   import org.aspectj.lang.ProceedingJoinPoint;
+   import org.aspectj.lang.annotation.*;
+
+   @Aspect
+   public abstract class AnnotationProxy {
+
+      abstract protected void println(String string);
+
+      @Pointcut("execution(* cn.cpf.aop.annotation.AnnotationProxyObjectDemo.testProxy1(..))")
+      public void pointCut() {}
+
+      // 输入带有 @Pointcut 注解 的方法名
+      @Before("pointCut()")
+      public void before() {
+         println(" before no args ");
+      }
+
+      // 可以直接输入表达式
+      @After("execution(* cn.cpf.aop.annotation.AnnotationProxyObjectDemo.testProxy1(..))")
+      public void after() {
+         println(" after ");
+      }
+
+      @AfterReturning(returning = "rst", value = "pointCut()")
+      public void afterReturn(Object rst) {
+         println(" afterReturn ");
+      }
+
+      @AfterThrowing(throwing = "e", value = "pointCut()")
+      public void afterThrow(Throwable e) {
+         println(" afterThrow " + e.toString());
+      }
+
+      @Around("pointCut()")
+      public void around(ProceedingJoinPoint pjp) {
+         println(" around start ");
+         try {
+               pjp.proceed();
+         } catch (Throwable throwable) {
+               println(" around throwable ");
+               throwable.printStackTrace();
+         }
+         println(" around end ");
+      }
+   }
+
+   // 代理类1, order 排序为 2
+   package cn.cpf.aop.annotation;
+
+   import cn.cpf.aop.common.LoggerUtils;
+   import org.springframework.core.annotation.Order;
+   import org.springframework.stereotype.Component;
+
+   @Component
+   @Order(2)
+   public class AnnotationProxy1 extends AnnotationProxy{
+
+      @Override
+      protected void println(String string) {
+         LoggerUtils.logInfo("AnnotationProxy 1 == " + string);
+      }
+   }
+
+
+   // 代理类2,  order 排序为 1
+   package cn.cpf.aop.annotation;
+
+   import cn.cpf.aop.common.LoggerUtils;
+   import org.springframework.core.annotation.Order;
+   import org.springframework.stereotype.Component;
+
+   @Component
+   @Order(1)
+   public class AnnotationProxy2 extends AnnotationProxy{
+
+      @Override
+      protected void println(String string) {
+         LoggerUtils.logInfo("AnnotationProxy 2 == " + string);
+      }
+   }
+
+   ```
+
+- 代理对象
+
+   ```java
+   package cn.cpf.aop.annotation;
+
+   import cn.cpf.aop.common.LoggerUtils;
+   import org.springframework.stereotype.Component;
+
+   @Component("annotationProxyObjectDemo")
+   public class AnnotationProxyObjectDemo implements IAopAnnotation {
+
+      @Override
+      public void testProxy1() {
+         LoggerUtils.logInfo("执行 testProxy1 方法");
+      }
+
+      @Override
+      public void testProxy2() {
+         LoggerUtils.logInfo("执行 testProxy2 方法");
+      }
+
+   }
+   ```
+
+- 测试
+
+   ```java
+    public static void main(String[] args) {
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("aop-annotation.xml");
+        IAopAnnotation aopAnnotation = applicationContext.getBean("annotationProxyObjectDemo", IAopAnnotation.class);
+        aopAnnotation.testProxy1();
+    }
+   ```
+
+- 输出
+
+   ```log
+   14:00:09.987 [main] INFO cn.cpf.aop.common.LoggerUtils - AnnotationProxy 2 ==  around start
+   14:00:09.987 [main] INFO cn.cpf.aop.common.LoggerUtils - AnnotationProxy 2 ==  before no args
+   14:00:09.987 [main] INFO cn.cpf.aop.common.LoggerUtils - AnnotationProxy 1 ==  around start
+   14:00:09.987 [main] INFO cn.cpf.aop.common.LoggerUtils - AnnotationProxy 1 ==  before no args
+   14:00:09.987 [main] INFO cn.cpf.aop.common.LoggerUtils - 执行 testProxy1 方法
+   14:00:09.987 [main] INFO cn.cpf.aop.common.LoggerUtils - AnnotationProxy 1 ==  around end
+   14:00:09.987 [main] INFO cn.cpf.aop.common.LoggerUtils - AnnotationProxy 1 ==  after
+   14:00:09.987 [main] INFO cn.cpf.aop.common.LoggerUtils - AnnotationProxy 1 ==  afterReturn
+   14:00:09.987 [main] INFO cn.cpf.aop.common.LoggerUtils - AnnotationProxy 2 ==  around end
+   14:00:09.987 [main] INFO cn.cpf.aop.common.LoggerUtils - AnnotationProxy 2 ==  after
+   14:00:09.987 [main] INFO cn.cpf.aop.common.LoggerUtils - AnnotationProxy 2 ==  afterReturn
+   ```
