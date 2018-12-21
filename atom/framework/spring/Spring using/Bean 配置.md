@@ -1,5 +1,18 @@
 # Bean 配置
 
+## xml 配置标签
+
+### context:property-placeholder
+
+    ```xml
+    <context:property-placeholder location="classpath:application.properties"></context:property-placeholder>
+    ```
+
+    含义 : 指定spring容器是采用扫描反射发现机制扫描文件的路径
+    spring容器是采用扫描反射发现机制，通过标签的命名空间实例化实例，指明了烧苗文件的路径
+
+    在spring配置文件，只能使用一个<context:property-placeholder >, 多的话后面不进行扫描
+
 ## Bean 中 id 和 name的区别 
 
 1. id属性命名必须满足XML的命名规范，因为id其实是XML中就做了限定的。总结起来就相当于一个Java变量的命名：不能以数字，符号打头，不能有空格，如123，?ad,"ab "等都是不规范的，Spring在初始化时就会报错，诸如:

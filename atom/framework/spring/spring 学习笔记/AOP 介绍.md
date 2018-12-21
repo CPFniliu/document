@@ -1,37 +1,34 @@
-# AOP 相关
+# Spring AOP 学习笔记
 
 [TOC]
 
-## 基本概念
+## 基础知识
 
-切面（Aspect）：官方的抽象定义为“一个关注点的模块化，这个关注点可能会横切多个对象”。“切面”在ApplicationContext中\<aop:aspect\>来配置。
-连接点（Joinpoint）：程序执行过程中的某一行为，例如，MemberService.get的调用或者MemberService.delete抛出异常等行为。
-通知（Advice）：“切面”对于某个“连接点”所产生的动作。其中，一个“切面”可以包含多个“Advice”。
-切入点（Pointcut）：匹配连接点的断言，在AOP中通知和一个切入点表达式关联。切面中的所有通知所关注的连接点，都由切入点表达式来决定。
-目标对象（TargetObject）：被一个或者多个切面所通知的对象。例如，AServcieImpl和BServiceImpl，当然在实际运行时，SpringAOP采用代理实现，实际AOP操作的是TargetObject的代理对象。
-AOP代理（AOPProxy）：在SpringAOP中有两种代理方式，JDK动态代理和CGLIB代理。默认情况下，TargetObject实现了接口时，则采用JDK动态代理，例如，AServiceImpl；反之，采用CGLIB代理，例如，BServiceImpl。强制使用CGLIB代理需要将\<aop:config\>的proxy-target-class属性设为true。
+### 示例配置
 
-## 通知（Advice）类型：
-
-前置通知（Beforeadvice）：在某连接点（JoinPoint）之前执行的通知，但这个通知不能阻止连接点前的执行。ApplicationContext中在\<aop:aspect\>里面使用\<aop:before\>元素进行声明。例如，TestAspect中的doBefore方法。
-后置通知（Afteradvice）：当某连接点退出的时候执行的通知（不论是正常返回还是异常退出）。ApplicationContext中在\<aop:aspect\>里面使用\<aop:after\>元素进行声明。例如，ServiceAspect中的returnAfter方法，所以Teser中调用UserService.delete抛出异常时，returnAfter方法仍然执行。
-返回后通知（Afterreturnadvice）：在某连接点正常完成后执行的通知，不包括抛出异常的情况。ApplicationContext中在\<aop:aspect\>里面使用\<after-returning\>元素进行声明。
-环绕通知（Aroundadvice）：包围一个连接点的通知，类似Web中Servlet规范中的Filter的doFilter方法。可以在方法的调用前后完成自定义的行为，也可以选择不执行。ApplicationContext中在\<aop:aspect\>里面使用\<aop:around\>元素进行声明。例如，ServiceAspect中的around方法。
-抛出异常后通知（Afterthrowingadvice）：在方法抛出异常退出时执行的通知。ApplicationContext中在\<aop:aspect\>里面使用\<aop:after-throwing\>元素进行声明。例如，ServiceAspect中的returnThrow方法。
-
-注：可以将多个通知应用到一个目标对象上，即可以将多个切面织入到同一目标对象。
-
-## spring 配置
-
-### 五种 Advice
-
-   前置通知（Before advice）：在某连接点之前执行的通知，但这个通知不能阻止连接点之前的执行流程（除非它抛出一个异常）。
-   后置通知（After returning advice）：在某连接点正常完成后执行的通知：例如，一个方法没有抛出任何异常，正常返回。
-   异常通知（After throwing advice）：在方法抛出异常退出时执行的通知。
-   最终通知（After (finally) advice）：当某连接点退出的时候执行的通知（不论是正常返回还是异常退出）。
-   环绕通知（Around Advice）：包围一个连接点的通知，如方法调用。这是最强大的一种通知类型。环绕通知可以在方法调用前后完成自定义的行为。它也会选择是否继续执行连接点或直接返回它自己的返回值或抛出异常来结束执行。
-
-   通知方法中可以没有参数, 也可以加一个 JoinPoint 类型的参数用于获取调用代理对象方法的参数信息.
+   ```xml
+   <!-- 代理配置 -->
+   <aop:config proxy-target-class="true" >
+      <!-- 切入点 配置 -->
+      <aop:pointcut expression="execution(* cn.cpf.aop.xml.ProxyDemo.testProxy1(..))" id="pt1"/>
+      <!-- 切面 配置 -->
+      <aop:aspect ref = "xmlProxy1" order="1">
+         <!-- 通知（Advice）配置 -->
+         <aop:before method="before" pointcut-ref="pt1" />
+         <aop:around method="around" pointcut-ref="pt1" />
+         <aop:after method="after" pointcut-ref="pt1" />
+         <aop:after-throwing method="afterThrow" throwing="e" pointcut-ref="pt1" />
+         <aop:after-returning method="afterReturn" returning="rst"  pointcut-ref="pt1" />
+      </aop:aspect>
+      <aop:aspect ref = "xmlProxy2" order="2">
+         <aop:around method="around" pointcut-ref="pt1" />
+         <aop:before method="before" pointcut-ref="pt1" />
+         <aop:after method="after" pointcut-ref="pt1" />
+         <aop:after-throwing method="afterThrow" throwing="e" pointcut-ref="pt1" />
+         <aop:after-returning method="afterReturn" returning="rst"  pointcut-ref="pt1" />
+      </aop:aspect>
+   </aop:config>
+   ```
 
    ```java
    //配置切入点,该方法无方法体,主要为方便同类中其他方法使用此处配置的切入点
@@ -74,6 +71,31 @@ AOP代理（AOPProxy）：在SpringAOP中有两种代理方式，JDK动态代理
       log.info("afterThrow " + joinPoint + "\t" + ex.getMessage());
    }
    ```
+
+### 相关概念
+
+   切面（Aspect）: 对应一个代理类。
+   通知（Advice）：对应一个代理类中的一个代理方法。
+   切入点（Pointcut）：匹配连接点的断言，在AOP中通知和一个切入点表达式关联。切面中的所有通知所关注的连接点，都由切入点表达式来决定。
+   连接点（Joinpoint）：程序执行过程中的某一行为，例如，MemberService.get的调用或者MemberService.delete抛出异常等行为。
+   目标对象（TargetObject）：代理对象
+
+### 通知（Advice）类型：
+
+   前置通知（Before advice）：在某连接点之前执行的通知，但这个通知不能阻止连接点之前的执行流程（除非它抛出一个异常）。
+   后置通知（After returning advice）：在某连接点正常完成后执行的通知：例如，一个方法没有抛出任何异常，正常返回。
+   异常通知（After throwing advice）：在方法抛出异常退出时执行的通知。
+   最终通知（After (finally) advice）：当某连接点退出的时候执行的通知（不论是正常返回还是异常退出）。
+   环绕通知（Around Advice）：包围一个连接点的通知，如方法调用。这是最强大的一种通知类型。环绕通知可以在方法调用前后完成自定义的行为。它也会选择是否继续执行连接点或直接返回它自己的返回值或抛出异常来结束执行。
+
+   通知方法中可以没有参数, 也可以加一个 JoinPoint 类型的参数用于获取调用代理对象方法的参数信息.
+
+### 代理过程
+
+   spring 代理 分为 JDK 代理, 和 CGlib 动态代理,
+   可以通过 proxy-target-class 进行配置, 为true则是基于类的代理将起作用（需要cglib库），为false或者省略这个属性，则会使用标准的JDK 基于接口的代理。
+   如果没有配置 proxy-target-class 属性, spring默认走JDK 代理.
+   但无论如何配置如果代理对象没有实现接口，spring会自动使用CGLIB代理。
 
 ### AOP执行顺序
 
@@ -159,13 +181,6 @@ order 属性是一个整数, 每个切面默认的 Order 是整数的最大值.
    属性值为 true 和 false, true 表示就通过一个ThreadLocal保存代理
 
    是否暴露当前代理对象为ThreadLocal模式。
-
-## 代理过程
-
-   spring 代理 分为 JDK 代理, 和 CGlib 动态代理,
-   可以通过 proxy-target-class 进行配置, 为true则是基于类的代理将起作用（需要cglib库），为false或者省略这个属性，则会使用标准的JDK 基于接口的代理。
-   如果没有配置 proxy-target-class 属性, spring默认走JDK 代理.
-   但无论如何配置如果代理对象没有实现接口，spring会自动使用CGLIB代理。
 
 ## AOP 使用
 

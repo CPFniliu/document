@@ -108,29 +108,34 @@
     </context-param>
     ```
 
-### 4. 集成数据库连接池 c3p0
-   1. 添加依赖。
-   ```XML
-        <dependency>
-            <groupId>com.mchange</groupId>
-            <artifactId>c3p0</artifactId>
-            <version>0.9.5.2</version>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.47</version>
-        </dependency>
+## 4. 集成数据库连接池 c3p0
+
+1. 添加依赖。
+
+    ```XML
+    <dependency>
+        <groupId>com.mchange</groupId>
+        <artifactId>c3p0</artifactId>
+        <version>0.9.5.2</version>
+    </dependency>
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>5.1.47</version>
+    </dependency>
    ```
-   2. 新建 db.properties 文件.
+
+2. 新建 db.properties 文件.
+
     ```properties
-     #mysql
-     db.driver=com.mysql.jdbc.Driver
-     db.url=jdbc:mysql://127.0.0.1:3306/cpfframe4j?autoReconnect=true&useSSL=false
-     db.user=root
-     db.password=cpfniliu4823
+        #mysql
+        db.driver=com.mysql.jdbc.Driver
+        db.url=jdbc:mysql://127.0.0.1:3306/cpfframe4j?autoReconnect=true&useSSL=false
+        db.user=root
+        db.password=cpfniliu4823
     ```
-   3. 在 spring-context 中定义 c3p0 数据源 ComboPooledDataSource
+
+   1. 在 spring-context 中定义 c3p0 数据源 ComboPooledDataSource
     ```XML
 
     <context:property-placeholder location="classpath:db.properties"></context:property-placeholder>

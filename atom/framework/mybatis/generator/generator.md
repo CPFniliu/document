@@ -1,4 +1,8 @@
-#### 配置在项目中
+
+
+### generator
+
+配置在项目中
 1. 添加 pom 配置
    ```XML
       <build>
@@ -14,6 +18,7 @@
           </plugins>
       </build>
    ```
+   
 2. 配置 generatorConfig.xml文件
 3. 执行
 `mvn mybatis-generator:generate`
