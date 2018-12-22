@@ -1,6 +1,5 @@
 # dubbo
 
-
 ## dubbo 配置数据加密
 
 ## dubbo框架中运行spring容器
@@ -21,31 +20,38 @@
 
 ## 使用
 
-[jdbc.properties](/soft-config/resources files/template/jdbc)
+   http://dubbo.apache.org/en-us/docs/user/quick-start.html
 
-```props
-# 服务名
-application.name=user-service
-# 服务端口号
-dubbo.service.provider.port=20880
-dubbo.service.provider.threads=200
-# 缓存位置
-dubbo.cache.dir=/logs/cache
+   使用spring集成dubbo 基本需要有三个模块
+   dubbo-demo-api: the common service api
+   dubbo-demo-provider: the demo provider codes
+   dubbo-demo-consumer: the demo consumer codes
 
-# 服务发布zookeeper地址
-dubbo.zk.servers=192.168.198.128:2181
-dubbo.zk.group=cpf-lottery-dubbo
+   application.properties
 
-# 管理人
-dubbo.application.owner=cpfsingjie
-dubbo.protocol.accesslog=/logs/dubbo-user.log
-```
+   ```props
+   # 服务名
+   application.name=user-service
+   # 服务端口号
+   dubbo.service.provider.port=20880
+   dubbo.service.provider.threads=200
+   # 缓存位置
+   dubbo.cache.dir=/logs/cache
 
-xml 文件
+   # 服务发布zookeeper地址
+   dubbo.zk.servers=192.168.198.128:2181
+   dubbo.zk.group=cpf-lottery-dubbo
 
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
+   # 管理人
+   dubbo.application.owner=cpfsingjie
+   dubbo.protocol.accesslog=/logs/dubbo-user.log
+   ```
+
+xml 文件 : dubbo-demo-provider: the demo provider codes
+
+   ```xml
+   <?xml version="1.0" encoding="UTF-8"?>
+   <beans xmlns="http://www.springframework.org/schema/beans"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
       xsi:schemaLocation="http://www.springframework.org/schema/beans
@@ -64,5 +70,48 @@ xml 文件
       <!-- 第四步：设置服务提供方 提供的接口 也可以配置其他文件-->
       <dubbo:service interface="cn.cpf.userservice.api.IUserCoreService" ref="userCoreService"/>
 
-</beans>
-```
+   </beans>
+   ```
+
+xml 文件 : dubbo-demo-consumer: the demo consumer codes
+
+   ```xml
+   <?xml version="1.0" encoding="UTF-8"?>
+   <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+         xmlns="http://www.springframework.org/schema/beans"
+         xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+         http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
+
+      <!-- consumer's application name, used for tracing dependency relationship (not a matching criterion),
+      don't set it same as provider -->
+      <dubbo:application name="demo-consumer"/>
+      <!-- use multicast registry center to discover service -->
+      <dubbo:registry address="multicast://224.5.6.7:1234"/>
+      <!-- generate proxy for the remote service, then demoService can be used in the same way as the
+      local regular interface -->
+      <dubbo:reference id="demoService" check="false" interface="org.apache.dubbo.demo.DemoService"/>
+   </beans>
+   ```
+
+xml 文件 : dubbo-demo-api: the common service api
+
+   ```xml
+   <?xml version="1.0" encoding="UTF-8"?>
+      <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+            xmlns="http://www.springframework.org/schema/beans"
+            xmlns:context="http://www.springframework.org/schema/context"
+            xsi:schemaLocation="http://www.springframework.org/schema/beans
+               http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+               http://www.springframework.org/schema/context
+               http://www.springframework.org/schema/context/spring-context-4.0.xsd
+               http://code.alibabatech.com/schema/dubbo
+               http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+         <context:annotation-config/>
+
+         <dubbo:reference id="userCoreService" interface="com.gupaoedu.user.IUserCoreService"/>
+   </beans>
+
+   ```

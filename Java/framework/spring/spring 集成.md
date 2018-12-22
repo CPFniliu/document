@@ -75,7 +75,6 @@
    spring-jdbc 包含 spring-tx
    spring-webmvc 包含 spring-web, spring-context,
 
-
 ## 集成
 
 ### 持久层
@@ -262,6 +261,13 @@
    note :
    1. sqlSessionFactoryBeanName 用 value 而不用 ref
       如果用 ref 指定 sqlSessionFactory 很可能会因为初始化MyBatis时，jdbc.properties文件还没被加载进来，dataSource的属性值没有被替换，就开始构造sqlSessionFactory类，而加载失败
-   2. 扫描 自动扫描 mapping.xml 文件时, 要在 pom.xml 文件加上 build:resources:resource 告诉 maven 打包时将xml 文件也打进去
+   2. (待确认)扫描 自动扫描 mapping.xml 文件时, 要在 pom.xml 文件加上 build:resources:resource 告诉 maven 打包时将xml 文件也打进去
 
+### 集成中间件
+
+#### dubbo
+
+#### zookeeper
+
+      集成dubbo和zookeeper 看相应笔记
 
