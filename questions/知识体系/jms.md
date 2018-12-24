@@ -1,0 +1,9 @@
+# 面试题
+
+1. JMS 优点? (灵活, 异步化解偶)
+2. JMS 两种消息传递域? 两种消息传递域的模型是什么, 都有什么特点?
+3. JMS 五种消息类型
+4. JMS 开发的基本步骤
+5. Session createSession(boolean transacted, int acknowledgeMode)这两个参数的含义
+6. JMS 消息的可靠性机制
+7. Kafka、ActiveMQ、RabbitMQ、RocketMQ 有什么优缺点？(https://gper.gupaoedu.com/artical_content?id=511)

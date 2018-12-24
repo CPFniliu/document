@@ -148,6 +148,16 @@
    </dependency>
    ```
 
+#### 消息中间件
+
+   ```xml
+   <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-all</artifactId>
+      <version>5.15.8</version>
+   </dependency>
+   ```
+
 #### test
 
    ```xml
