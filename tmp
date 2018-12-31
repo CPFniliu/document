@@ -3,4 +3,6 @@ AUTO_ACKNOWLEDGE
 
 
 
+5.Zookeeper做了什么？
 
+1.命名服务   2.配置管理   3.集群管理   4.分布式锁  5.队列管理

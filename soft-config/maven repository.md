@@ -6,28 +6,14 @@
 
    https://search.maven.org/
 
-## pom 相关资源
+## pom 依赖
 
-### 依赖
+### frame work
 
 #### spring
 
 ```xml
 ```
-
-#### 数据库
-
-##### jdbc
-
-   ```xml
-   <!-- mysql -->
-   <dependency>
-         <groupId>mysql</groupId>
-         <artifactId>mysql-connector-java</artifactId>
-         <version>5.1.47</version>
-         <scope>runtime</scope>
-   </dependency>
-   ```
 
 ##### mybatis
 
@@ -44,6 +30,32 @@
          <version>1.3.2</version>
    </dependency>
    ```
+
+---
+
+### 数据库
+
+#### jdbc
+
+   ```xml
+   <!-- mysql -->
+   <dependency>
+         <groupId>mysql</groupId>
+         <artifactId>mysql-connector-java</artifactId>
+         <version>5.1.47</version>
+         <scope>runtime</scope>
+   </dependency>
+   ```
+
+##### redis
+
+      ```xml
+      <dependency>
+      <groupId>redis.clients</groupId>
+      <artifactId>jedis</artifactId>
+      <version>3.0.0</version>
+      </dependency>
+      ```
 
 ##### 连接池
 
