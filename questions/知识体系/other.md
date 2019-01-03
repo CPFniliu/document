@@ -22,3 +22,8 @@
 2. 一个完整的http请求
 3. https
 
+
+
+[XML的四种解析方法](https://www.cnblogs.com/ygj0930/p/6646572.html)
+
+5种IO模型

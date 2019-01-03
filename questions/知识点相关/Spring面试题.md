@@ -2,17 +2,17 @@
 
 1. 什么是spring?
 2. 使用Spring框架的好处是什么？
-3.  Spring由哪些模块组成?
+3. Spring由哪些模块组成?
 4. 核心容器（应用上下文) 模块。
 5. BeanFactory – BeanFactory 实现举例。
 6. XMLBeanFactory
 7. 解释AOP模块
 8. 解释JDBC抽象和DAO模块。
 9. 解释对象/关系映射集成模块。
-10.  解释WEB 模块。
-12.  Spring配置文件
-13.  什么是Spring IOC 容器？
-14.  IOC的优点是什么？
+10. 解释WEB 模块。
+12. Spring配置文件
+13. 什么是Spring IOC 容器？
+14. IOC的优点是什么？
 15. ApplicationContext通常的实现是什么?
 16. Bean 工厂和 Application contexts  有什么区别？
 17. 一个Spring的应用看起来象什么？

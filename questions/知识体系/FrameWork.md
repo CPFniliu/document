@@ -4,6 +4,10 @@
 
 #### 基础知识
 
+1. 什么是spring, 设计初衷, 目标.
+2. spring 优点, 
+3. 依赖注入原理
+
 ##### IOC & DI
 
 ##### AOP
@@ -17,6 +21,9 @@
 #### Context
 
 ##### Factory
+
+1. BeanFactory实例化
+2. BeanPostProcessor
 
 ##### BeanFactory & FactoryBean
 
