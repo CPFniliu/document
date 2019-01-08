@@ -54,6 +54,72 @@ void MethodA() {
    - 外部事务回滚/提交代码不做任何修改,那么如果内部事务(ServiceB#MethodB)rollback,那么首先ServiceB.MethodB回滚到它执行之前的SavePoint(在任何情况下都会如此),外部事务(即ServiceA#MethodA)将根据具体的配置决定自己是commit还是rollback
 5. 另外三种事务传播属性基本用不到，在此不做分析。
 
+> PROPAGATION_REQUIRES_NEW 启动一个新的, 不依赖于环境的 "内部" 事务. 这个事务将被完全 commited 或 rolled back 而不依赖于外部事务, 它拥有自己的隔离范围, 自己的锁, 等等. 当内部事务开始执行时, 外部事务将被挂起, 内务事务结束时, 外部事务将继续执行. 
+> 另一方面, PROPAGATION_NESTED 开始一个 "嵌套的" 事务,  它是已经存在事务的一个真正的子事务. 潜套事务开始执行时,  它将取得一个 savepoint. 如果这个嵌套事务失败, 我们将回滚到此 savepoint. 潜套事务是外部事务的一部分, 只有外部事务结束后它才会被提交. 
+> 由此可见, PROPAGATION_REQUIRES_NEW 和 PROPAGATION_NESTED 的最大区别在于, PROPAGATION_REQUIRES_NEW 完全是一个新的事务, 而 PROPAGATION_NESTED 则是外部事务的子事务, 如果外部事务 commit, 潜套事务也会被 commit, 这个规则同样适用于 roll back.
+
+## springtx 其他属性
+
+### @Transactional注解中常用参数说明
+
+type | name
+-|-
+readOnly | 该属性用于设置当前事务是否为只读事务，设置为true表示只读，false则表示可读写，默认值为false。例如：@Transactional(readOnly=true)
+rollbackFor | 该属性用于设置需要进行回滚的异常类数组，当方法中抛出指定异常数组中的异常时，则进行事务回滚。<br/> 例如：指定单一异常类：@Transactional(rollbackFor=RuntimeException.class) <br/> 指定多个异常类：@Transactional(rollbackFor={RuntimeException.class, Exception.class})
+rollbackForClassName | 该属性用于设置需要进行回滚的异常类名称数组， 当方法中抛出指定异常名称数组中的异常时， 则进行事务回滚。例如：<br/>指定单一异常类名称：@Transactional(rollbackForClassName=”RuntimeException”) <br/>指定多个异常类名称：@Transactional(rollbackForClassName={“RuntimeException”,”Exception”})
+noRollbackFor | 该属性用于设置不需要进行回滚的异常类数组， 当方法中抛出指定异常数组中的异常时，不进行事务回滚。 例如：<br/>指定单一异常类：@Transactional(noRollbackFor=RuntimeException.class) <br/>指定多个异常类：@Transactional(noRollbackFor={RuntimeException.class, Exception.class})
+noRollbackForClassName | 该属性用于设置不需要进行回滚的异常类名称数组，当方法中抛出指定异常名称数组中的异常时，不进行事务回滚。例如：<br/>指定单一异常类名称：@Transactional(noRollbackForClassName=”RuntimeException”)  <br/>指定多个异常类名称：@Transactional(noRollbackForClassName={“RuntimeException”,”Exception”})
+propagation | 该属性用于设置事务的传播行为，例如：@Transactional(propagation=Propagation.NOT_SUPPORTED, readOnly=true)
+isolation | 该属性用于设置底层数据库的事务隔离级别，事务隔离级别用于处理多事务并发的情况，通常使用数据库的默认隔离级别即可，基本不需要进行设置
+timeout | 该属性用于设置事务的超时秒数，默认值为-1表示永不超时
+
+注意
+
+1. @Transactional 只能被应用到public方法上, 对于其它非public的方法,如果标记了@Transactional也不会报错,但方法没有事务功能.
+2. 用 spring 事务管理器,由spring来负责数据库的打开, 提交, 回滚. 默认遇到运行期例外(throw new RuntimeException(“注释”);)会回滚，即遇到不受检查（unchecked）的例外时回滚；而遇到需要捕获的例外(throw new Exception(“注释”);)不会回滚,即遇到受检查的例外（就是非运行时抛出的异常，编译器会检查到的异常叫受检查例外或说受检查异常）时，需我们指定方式来让事务回滚 要想所有异常都回滚,要加上 @Transactional( rollbackFor={Exception.class,其它异常})
+3. Spring团队的建议是你在具体的类（或类的方法）上使用 @Transactional 注解，而不要使用在类所要实现的任何接口上。你当然可以在接口上使用 @Transactional 注解，但是这将只能当你设置了基于接口的代理时它才生效。因为注解是 不能继承 的，这就意味着如果你正在使用基于类的代理时，那么事务的设置将不能被基于类的代理所识别，而且对象也将不会被事务代理所包装（将被确认为严重的）。因 此，请接受Spring团队的建议并且在具体的类上使用 @Transactional 注解。
+
+## 使用步骤：
+
+步骤一、在spring配置文件中引入\<tx:\>命名空间
+
+```xml
+<beans xmlns=”http://www.springframework.org/schema/beans”
+ xmlns:xsi=”http://www.w3.org/2001/XMLSchema-instance”
+ xmlns:tx=”http://www.springframework.org/schema/tx”
+ xsi:schemaLocation=”http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+ http://www.springframework.org/schema/tx
+ http://www.springframework.org/schema/tx/spring-tx-3.0.xsd”>
+
+<!-- 具有@Transactional 注解的bean自动配置为声明式事务支持 -->
+<!-- 如果proxy-target-class 属性值被设置为true，那么基于类的代理将起作用（这时需要cglib库） -->
+<tx:annotation-driven transaction-manager=”transactionManager” proxy-target-class=”true”/>
+
+ </beans>
+```
+
+```java
+
+   @Transactional
+   public class TestServiceBean implements TestService {}
+   // 当类中某些方法不需要事物时:
+
+   @Transactional
+   public class TestServiceBean implements TestService {
+      private TestDao dao;
+
+      public void setDao(TestDao dao) {
+         this.dao = dao;
+      }
+
+      @Transactional(propagation = Propagation.NOT_SUPPORTED)
+      public List<Object> getAll() {
+         return null;
+      }
+   }
+```
+
 ## Spring事务API架构图
 
 ![Spring事务API架构图](/assets/frame/spring/Spring事务API架构图.png)

@@ -28,7 +28,7 @@
 3. 相关的子类有哪些, BeanFactory继承的结构图
 4. DefaultListableBeanFactory继承结构图
    ![DefaultListableBeanFactory](/assets/frame/spring/Spring5-DefaultListableBeanFactory实现继承结构图.png)
-5. ListableBeanFactory、HierarchicalBeanFactory 和 AutowireCapableBeanFactory
+5. ListableBeanFactory, HierarchicalBeanFactory 和 AutowireCapableBeanFactory
 6. ApplicationContext 是什么, 和BeanFactory 有什么区别
 7. FactoryBean 是什么, 和 BeanFactory 有什么区别
 

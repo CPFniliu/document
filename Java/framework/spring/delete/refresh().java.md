@@ -3,7 +3,7 @@
 3. AbstractRefreshableConfigApplicationContext
 4. AbstractXmlApplicationContext
 5. FileSystemXmlApplicationContext
-   
+
 ```java
 AbstractApplicationContext.refresh(){
 // Prepare this context for refreshing.

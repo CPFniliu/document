@@ -1,16 +1,13 @@
 # spring Bean
 
+[TOC]
+
 ## 相关网页
 
    > [Spring中Bean的生命中期与InitializingBean和DisposableBean接口](https://blog.csdn.net/czplplp_900725/article/details/24932669)
    > [Spring中Bean的五大作用域及其生命周期](https://blog.csdn.net/qq_40587575/article/details/80007257)
 
-<!-- TOC -->autoauto- [spring Bean](#spring-bean)auto   - [相关网页](#相关网页)auto   - [spring Bean 作用域](#spring-bean-作用域)auto   - [Spring Bean 生命周期](#spring-bean-生命周期)auto      - [Spring Bean 生命周期流程](#spring-bean-生命周期流程)auto   - [spring Bean 相关方法](#spring-bean-相关方法)auto      - [各种接口方法分类](#各种接口方法分类)auto      - [容器级生命周期接口方法](#容器级生命周期接口方法)auto         - [BeanFactoryPostProcessor](#beanfactorypostprocessor)auto         - [BeanPostProcessor](#beanpostprocessor)auto         - [[InstantiationAwareBeanPostProcessor](https://blog.csdn.net/u010634066/article/details/80321854)](#instantiationawarebeanpostprocessorhttpsblogcsdnnetu010634066articledetails80321854)auto         - [BeanFactoryPostProcessor 和 BeanPostProcessor](#beanfactorypostprocessor-和-beanpostprocessor)auto      - [Bean级生命周期接口方法](#bean级生命周期接口方法)auto         - [BeanNameAware & BeanFactoryAware & ApplicationContextAware & ResourceLoaderAware & ServletContextAware](#beannameaware--beanfactoryaware--applicationcontextaware--resourceloaderaware--servletcontextaware)auto         - [InitializingBean & DisposableBean](#initializingbean--disposablebean)auto      - [Bean自身方法](#bean自身方法)autoauto<!-- /TOC -->
-
 ## spring Bean 作用域
-
-   singleton, prototype, request, session, global session。
-![Spring中Bean的五大作用域](/assets/frame/spring/Spring-Bean作用域.png)
 
 类别 | 说明 | 使用相关
 -|-|-

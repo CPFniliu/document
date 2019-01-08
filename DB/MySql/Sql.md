@@ -3,6 +3,7 @@
 > MYSQL 中 int 类型和 Integer 类型没有区别。
 
 ### ALTER
+
 操作 | 语句
 -|-
 添加字段 | ALTER TABLE test_tbl ADD i INT

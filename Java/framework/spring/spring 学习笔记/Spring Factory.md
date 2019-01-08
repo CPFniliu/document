@@ -1,4 +1,4 @@
-# BeanFactory
+# springFactory
 
 ## 容器
 
@@ -80,7 +80,7 @@ BeanFactory继承结构图
 1. ApplicationContext的三个经常用到的实现类：
    a. ClassPathXmlApplication ：把上下文文件当成类路径资源
    b. FileSystemXmlApplication ：从文件系统中的XML文件载入上下文定义信息
-   c. WebXmlApplicationContext ：从Web系统中的XML文件载入上下文定义信息
+   c. XmlWebApplicationContext ：从Web系统中的XML文件载入上下文定义信息
 
    第一种和第二种的区别在于，ClassPathXmlApplication 可以在整个类路径（包括JAR文件）中寻找定义Bean的XML文件；而 FileSystemXmlApplication 只能在指定路径中寻找。
 
@@ -162,7 +162,6 @@ BeanFactory继承结构图
 ```
 
 1. Properties 配置：使用<props>和<map>相似，最大区别是<prop>的值都是String
-
 
                 注意：
              使用设值注入必须要有set方法，通过name属性找set方法
