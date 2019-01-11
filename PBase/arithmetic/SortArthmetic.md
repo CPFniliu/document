@@ -1,5 +1,7 @@
 # sort
 
+[TOC]
+
 ## 排序算法简介
 
 ### 选择排序
@@ -20,7 +22,7 @@ public static void selectSort(int[] orderArr, boolean orderDirect) {
       mxidx = i;
       for (int j = i + 1; j < len; j++) {
             // 若orderDirext 为 true, 由小至大进行排序
-            if ((orderArr[j] < mx) == orderDirect) { 
+            if ((orderArr[j] < mx) == orderDirect) {
 //              if (orderArr[j] < mx) {
                mx = orderArr[j];
                mxidx = j;
@@ -87,6 +89,8 @@ public static void selectSort(int[] orderArr, boolean orderDirect) {
 
 ### 冒泡排序
 
+java
+
 ```java
    /**
    * Select sort
@@ -129,9 +133,27 @@ public static void selectSort(int[] orderArr, boolean orderDirect) {
    }
 ```
 
+python
+
+```python
+# 实现一个冒泡排序
+def bubboSort(arr):
+    len1 = len(arr) - 1
+    i = 0
+    while i < len1:
+        if arr[i] > arr[i + 1]:
+            tmp = arr[i]
+            arr[i] = arr[i + 1]
+            arr[i+1] = tmp
+        i = i + 1
+    len1 = len1 - 1
+```
+
 ### 归并排序
 
 ### 快速排序
+
+java
 
 ```java
    private static void $quickSort(int[] orderArr, int start, int end, boolean orderDirect) {
@@ -169,6 +191,33 @@ public static void selectSort(int[] orderArr, boolean orderDirect) {
    public static void quickSort(int[] arr) {
       $quickSort(arr, 0, arr.length - 1, false);
    }
+```
+
+python
+
+```python
+# 实现一个快速排序
+def quickSort(arr):
+   _quickSort(arr, 0, len(arr)-1)
+
+def _quickSort(arr, st, end):
+   if st >= end:
+      return
+   i, j , tmp = st, end, arr[st]
+   while i < j:
+      while i < j and arr[j] >= tmp:
+         j = j - 1
+      if i < j:
+         arr[i] = arr[j]
+         i = i + 1
+      while i < j and arr[i] < tmp:
+         i = i + 1
+      if i < j :
+         arr[j] = arr[i]
+         j = j -1
+   arr[i] = tmp
+   _quickSort(arr, st, i - 1)
+   _quickSort(arr, i + 1, end)
 ```
 
 ### 堆排序
