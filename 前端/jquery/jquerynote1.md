@@ -1,95 +1,68 @@
 # jQuery 选择器
 
-jQuery 选择器允许您对 HTML 元素组或单个元素进行操作。
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <meta charset="utf-8">
+  <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js">
+  </script>
+  <script>
+  $(document).ready(function(){
+    $("button").click(function(){
+      // $("a[target='_blank']").hide();
+      var h = $("p:first");
+      h.text($("a:eq(1)").attr("hj"))
 
-jQuery 选择器
-jQuery 选择器允许您对 HTML 元素组或单个元素进行操作。
-
-jQuery 选择器基于元素的 id、类、类型、属性、属性值等"查找"（或选择）HTML 元素。 它基于已经存在的 CSS 选择器，除此之外，它还有一些自定义的选择器。
-
-jQuery 中所有选择器都以美元符号开头：$()。
-
-元素选择器
-jQuery 元素选择器基于元素名选取元素。
-
-在页面中选取所有 <p> 元素:
-
-$("p")
-实例
-
-用户点击按钮后，所有 <p> 元素都隐藏：
-
-实例
-$(document).ready(function(){
-  $("button").click(function(){
-    $("p").hide();
+      // 获取第二个a标签里面属性 hj 的值
+      $("a:eq(1)").attr("hj")
+    });
   });
-});
+  </script>
+  </head>
+  <body>
 
-尝试一下 »
+  <h2>这是标题</h2>
+  <p>这是一个段落。</p>
+  <p>这是另外一个段落。</p>
+  <p><a href="http://www.runoob.com/html/" target="_blank" hj="fd1">HTML 教程</a></p>
+  <p><a href="http://www.runoob.com/html/" target="_blank" hj="fd222">HTML 教程11</a></p>
+  <p><a href="http://www.runoob.com/css/">CSS 教程</a></p>
+  <button>点我</button>
 
-#id 选择器
-jQuery #id 选择器通过 HTML 元素的 id 属性选取指定的元素。
+  </body>
+  </html>
+  ```
 
-页面中元素的 id 应该是唯一的，所以您要在页面中选取唯一的元素需要通过 #id 选择器。
-
-通过 id 选取元素语法如下：
-
-$("#test")
-实例
-
-当用户点击按钮后，有 id="test" 属性的元素将被隐藏：
-
-实例
-$(document).ready(function(){
-  $("button").click(function(){
-    $("#test").hide();
-  });
-});
-
-尝试一下 »
-
-.class 选择器
-jQuery 类选择器可以通过指定的 class 查找元素。
-
-语法如下：
-
-$(".test")
-实例
-
-用户点击按钮后所有带有 class="test" 属性的元素都隐藏：
-
-实例
-$(document).ready(function(){
-  $("button").click(function(){
-    $(".test").hide();
-  });
-});
-
-尝试一下 »
-
-更多实例
-语法	描述	实例
-$("*")	选取所有元素	在线实例
-$(this)	选取当前 HTML 元素	在线实例
-$("p.intro")	选取 class 为 intro 的 <p> 元素	在线实例
-$("p:first")	选取第一个 <p> 元素	在线实例
-$("ul li:first")	选取第一个 <ul> 元素的第一个 <li> 元素	在线实例
-$("ul li:first-child")	选取每个 <ul> 元素的第一个 <li> 元素	在线实例
-$("[href]")	选取带有 href 属性的元素	在线实例
-$("a[target='_blank']")	选取所有 target 属性值等于 "_blank" 的 <a> 元素	在线实例
-$("a[target!='_blank']")	选取所有 target 属性值不等于 "_blank" 的 <a> 元素	在线实例
-$(":button")	选取所有 type="button" 的 <input> 元素 和 <button> 元素	在线实例
-$("tr:even")	选取偶数位置的 <tr> 元素	在线实例
-$("tr:odd")	选取奇数位置的 <tr> 元素	在线实例
-独立文件中使用 jQuery 函数
-如果您的网站包含许多页面，并且您希望您的 jQuery 函数易于维护，那么请把您的 jQuery 函数放到独立的 .js 文件中。
-
-当我们在教程中演示 jQuery 时，会将函数直接添加到 <head> 部分中。不过，把它们放到一个单独的文件中会更好，就像这样（通过 src 属性来引用文件）：
-
-实例
-<head>
-<script src="http://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js">
-</script>
-<script src="my_jquery_functions.js"></script>
-</head>
+  ```js
+    // 选取当前 HTML 元素
+    $(this)
+    // 选取所有元素
+    $("*")
+    // 选择所有 p 标签元素
+    $("p").hide()
+    // 选择id=test的元素
+    $("#test")
+    // 选择class为test的元素
+    $(".test")
+    // 选取第一个 <p> 元素
+    $("p:first")
+    // 获取第二个a标签里面属性 hj 的值
+    $("a:eq(1)").attr("hj")
+    // 选取第一个 <ul> 元素的第一个 <li> 元素
+    $("ul li:first");
+    // 选取每个 <ul> 元素的第一个 <li> 元素
+    $("ul li:first-child")
+    // 选取带有 href 属性的元素
+    $("[href]")
+    // 选取所有 target 属性值等于 "_blank" 的 <a> 元素
+    $("a[target='_blank']")
+    // 选取所有 target 属性值不等于 "_blank" 的 <a> 元素
+    $("a[target!='_blank']")
+    // 选取所有 type="button" 的 <input> 元素 和 <button> 元素
+    $(":button")
+    // 选取偶数位置的 <tr> 元素
+    $("tr:even")
+    // 选取奇数位置的 <tr> 元素
+    $("tr:odd")
+  ```

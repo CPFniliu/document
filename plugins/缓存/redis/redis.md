@@ -1,40 +1,47 @@
 # Redis(remote dictionary server)
 
-## 简介
-　　1.什么是redis?
+## base
 
-　　　Redis 是一个基于内存的高性能key-value数据库。 
+### redis简介
 
-　　2.Reids的特点　　
+Redis 是一个基于内存的高性能key-value数据库。 
 
-　　　Redis本质上是一个Key-Value类型的内存数据库，很像memcached，整个数据库统统加载在内存当中进行操作，定期通过异步操作把数据库数据flush到硬盘上进行保存。因为是纯内存操作，Redis的性能非常出色，每秒可以处理超过 10万次读写操作，是已知性
+### redis特点　　
 
-　　　　　能最快的Key-Value DB。
+Redis本质上是一个Key-Value类型的内存数据库，很像memcached，整个数据库统统加载在内存当中进行操作，定期通过异步操作把数据库数据flush到硬盘上进行保存。因为是纯内存操作，Redis的性能非常出色，每秒可以处理超过 10万次读写操作，是已知性
 
-　　　Redis的出色之处不仅仅是性能，Redis最大的魅力是支持保存多种数据结构，此外单个value的最大限制是1GB，不像 memcached只能保存1MB的数据，因此Redis可以用来实现很多有用的功能，比方说用他的List来做FIFO双向链表，实现一个轻量级的高性 能消
+能最快的Key-Value DB。
 
-　　　　　息队列服务，用他的Set可以做高性能的tag系统等等。另外Redis也可以对存入的Key-Value设置expire时间，因此也可以被当作一 个功能加强版的memcached来用。
+Redis的出色之处不仅仅是性能，Redis最大的魅力是支持保存多种数据结构，此外单个value的最大限制是1GB，不像 memcached只能保存1MB的数据，因此Redis可以用来实现很多有用的功能，比方说用他的List来做FIFO双向链表，实现一个轻量级的高性能消息队列服务，用他的Set可以做高性能的tag系统等等。另外Redis也可以对存入的Key-Value设置expire时间，因此也可以被当作一 个功能加强版的memcached来用。
 
-　　　Redis的主要缺点是数据库容量受到物理内存的限制，不能用作海量数据的高性能读写，因此Redis适合的场景主要局限在较小数据量的高性能操作和运算上。
+Redis的主要缺点是数据库容量受到物理内存的限制，不能用作海量数据的高性能读写，因此Redis适合的场景主要局限在较小数据量的高性能操作和运算上。
 
-　　3.使用redis有哪些好处？ 　　
+### 优点
 
-   (1) 速度快，因为数据存在内存中，类似于HashMap，HashMap的优势就是查找和操作的时间复杂度都是O(1) 
-   (2) 支持丰富数据类型，支持string，list，set，sorted set，hash 
-   (3) 支持事务，操作都是原子性，所谓的原子性就是对数据的更改要么全部执行，要么全部不执行 
-   (4) 丰富的特性：可用于缓存，消息，按key设置过期时间，过期后将会自动删除
+1. 速度快，因为数据存在内存中，类似于HashMap，HashMap的优势就是查找和操作的时间复杂度都是O(1).
+2. 支持丰富数据类型，支持string，list，set，sorted set，hash.
+3. 支持事务，操作都是原子性，所谓的原子性就是对数据的更改要么全部执行，要么全部不执行.
+4. 丰富的特性：可用于缓存，消息，按key设置过期时间，过期后将会自动删除.
 
-　　4.redis相比memcached有哪些优势？ 　　
+### redis相比memcached有哪些优势？
 
-　　　(1) memcached所有的值均是简单的字符串，redis作为其替代者，支持更为丰富的数据类型 
-　　　(2) redis的速度比memcached快很多 (3) redis可以持久化其数据
+1. memcached所有的值均是简单的字符串，redis作为其替代者，支持更为丰富的数据类型
+2. redis的速度比memcached快很多
+3. redis可以持久化其数据
 
-　　5.Memcache与Redis的区别都有哪些？    
+### Memcache与Redis的区别都有哪些？
 
-　　　1)、存储方式 Memecache把数据全部存在内存之中，断电后会挂掉，数据不能超过内存大小。 Redis有部份存在硬盘上，这样能保证数据的持久性。 
-　　　2)、数据支持类型 Memcache对数据类型支持相对简单。 Redis有复杂的数据类型。 
-　　　3)、使用底层模型不同 它们之间底层实现方式 以及与客户端之间通信的应用协议不一样。 Redis直接自己构建了VM 机制 ，因为一般的系统调用系统函数的话，会浪费一定的时间去移动和请求。 
-　　6.redis常见性能问题和解决方案： 　　
+1. 存储方式 Memecache把数据全部存在内存之中，断电后会挂掉，数据不能超过内存大小。 Redis有部份存在硬盘上，这样能保证数据的持久性。
+2. 数据支持类型 Memcache对数据类型支持相对简单。 Redis有复杂的数据类型。
+3. 使用底层模型不同 它们之间底层实现方式 以及与客户端之间通信的应用协议不一样。 Redis直接自己构建了VM 机制 ，因为一般的系统调用系统函数的话，会浪费一定的时间去移动和请求。
+
+## redis常见性能问题和解决方案
+
+### 缓存击穿
+
+### 缓存雪崩
+
+### 缓存穿透
 
 　　　1).Master写内存快照，save命令调度rdbSave函数，会阻塞主线程的工作，当快照比较大时对性能影响是非常大的，会间断性暂停服务，所以Master最好不要写内存快照。
 
@@ -46,56 +53,47 @@
 
 　　　4). Redis主从复制的性能问题，为了主从复制的速度和连接的稳定性，Slave和Master最好在同一个局域网内
 
- 　　7. mySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据
+ 　　1. mySQL里有2000w数据，redis中只存20w的数据，如何保证redis中的数据都是热点数据
 
-　　　　相关知识：redis 内存数据集大小上升到一定大小的时候，就会施行数据淘汰策略（回收策略）。redis 提供 6种数据淘汰策略：
+### redis 回收策略
 
-volatile-lru：从已设置过期时间的数据集（server.db[i].expires）中挑选最近最少使用的数据淘汰
-volatile-ttl：从已设置过期时间的数据集（server.db[i].expires）中挑选将要过期的数据淘汰
-volatile-random：从已设置过期时间的数据集（server.db[i].expires）中任意选择数据淘汰
-allkeys-lru：从数据集（server.db[i].dict）中挑选最近最少使用的数据淘汰
-allkeys-random：从数据集（server.db[i].dict）中任意选择数据淘汰
-no-enviction（驱逐）：禁止驱逐数据
+redis 内存数据集大小上升到一定大小的时候，就会施行数据淘汰策略（回收策略）。redis 提供 6种数据淘汰策略：
+
+strategy | means
+-|-
+volatile-lru | 从已设置过期时间的数据集（server.db[i].expires）中挑选最近最少使用的数据淘汰
+volatile-ttl | 从已设置过期时间的数据集（server.db[i].expires）中挑选将要过期的数据淘汰
+volatile-random | 从已设置过期时间的数据集（server.db[i].expires）中任意选择数据淘汰
+allkeys-lru | 从数据集（server.db[i].dict）中挑选最近最少使用的数据淘汰
+allkeys-random | 从数据集（server.db[i].dict）中任意选择数据淘汰
+no-enviction（驱逐）| 禁止驱逐数据
+
+
 　　8.请用Redis和任意语言实现一段恶意登录保护的代码，限制1小时内每用户Id最多只能登录5次。具体登录函数或功能用空函数即可，不用详细写出。 
 
 　　　　用列表实现:列表中每个元素代表登陆时间,只要最后的第5次登陆时间和现在时间差不超过1小时就禁止登陆.用Python写的代码如下：
 
-　　　　
-
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
+```python
 #!/usr/bin/env python3
 import redis  
 import sys  
 import time  
- 
+
 r = redis.StrictRedis(host=’127.0.0.1′, port=6379, db=0)  
-try:       
+try:
     id = sys.argv[1]
-except:      
-    print(‘input argument error’)    
+except:
+    print(‘input argument error’)
     sys.exit(0)  
-if r.llen(id) >= 5 and time.time() – float(r.lindex(id, 4)) <= 3600:      
+if r.llen(id) >= 5 and time.time() – float(r.lindex(id, 4)) <= 3600:
     print(“you are forbidden logining”)
-else:       
-    print(‘you are allowed to login’)    
-    r.lpush(id, time.time())    
+else:
+    print(‘you are allowed to login’)
+    r.lpush(id, time.time())
     # login_func()
+```
+
+
 　　9.为什么redis需要把所有数据放到内存中?　
 
 　　　Redis为了达到最快的读写速度将数据都读到内存中，并通过异步的方式将数据写入磁盘。所以redis具有快速和数据持久化的特征。如果不将数据放在内存中，磁盘I/O速度为严重影响redis的性能。在内存越来越便宜的今天，redis将会越来越受欢迎。
@@ -136,7 +134,7 @@ else:
 
 　　　　　　分数据进行回滚。修复之后我们就可以再次重新启动Redis服务器了。
 
-　　13.WATCH命令和基于CAS的乐观锁：　
+13.WATCH命令和基于CAS的乐观锁：　
 
 　　　在Redis的事务中，WATCH命令可用于提供CAS(check-and-set)功能。假设我们通过WATCH命令在事务执行之前监控了多个Keys，倘若在WATCH之后有任何Key的值发生了变化，EXEC命令执行的事务都将被放弃，同时返回Null multi-bulk应答以通知调用者事务
 
@@ -153,28 +151,28 @@ else:
 　　EXEC
 　　和此前代码不同的是，新代码在获取mykey的值之前先通过WATCH命令监控了该键，此后又将set命令包围在事务中，这样就可以有效的保证每个连接在执行EXEC之前，如果当前连接获取的mykey的值被其它连接的客户端修改，那么当前连接的EXEC命令将执行失败。这样调用者在判断返回值后就可以获悉val是否被重新设置成功。
 
-　　14.redis持久化的几种方式
+### redis持久化的几种方式
 
-1、快照（snapshots）
+1. 快照（snapshots）
 　　缺省情况情况下，Redis把数据快照存放在磁盘上的二进制文件中，文件名为dump.rdb。你可以配置Redis的持久化策略，例如数据集中每N秒钟有超过M次更新，就将数据写入磁盘；或者你可以手工调用命令SAVE或BGSAVE。
 　　工作原理
 　　． Redis forks.
 　　． 子进程开始将数据写到临时RDB文件中。
 　　． 当子进程完成写RDB文件，用新文件替换老文件。
 　　． 这种方式可以使Redis使用copy-on-write技术。
-2、AOF
+2. AOF
 　　快照模式并不十分健壮，当系统停止，或者无意中Redis被kill掉，最后写入Redis的数据就会丢失。这对某些应用也许不是大问题，但对于要求高可靠性的应用来说，
 　　Redis就不是一个合适的选择。
 　　Append-only文件模式是另一种选择。
 　　你可以在配置文件中打开AOF模式
-3、虚拟内存方式
+3. 虚拟内存方式
 　　当你的key很小而value很大时,使用VM的效果会比较好.因为这样节约的内存比较大.
 　　当你的key不小时,可以考虑使用一些非常方法将很大的key变成很大的value,比如你可以考虑将key,value组合成一个新的value.
 　　vm-max-threads这个参数,可以设置访问swap文件的线程数,设置最好不要超过机器的核数,如果设置为0,那么所有对swap文件的操作都是串行的.可能会造成比较长时间的延迟,但是对数据完整性有很好的保证.
 
 　　自己测试的时候发现用虚拟内存性能也不错。如果数据量很大，可以考虑分布式或者其他数据库
 
-　　15.redis的缓存失效策略和主键失效机制
+15. redis的缓存失效策略和主键失效机制
 
 　　作为缓存系统都要定期清理无效数据，就需要一个主键失效和淘汰策略.
 　　在Redis当中，有生存期的key被称为volatile。在创建缓存时，要为给定的key设置生存期，当key过期的时候（生存期为0），它可能会被删除。
@@ -203,7 +201,7 @@ else:
 　　三种数据淘汰策略：
 　　ttl和random比较容易理解，实现也会比较简单。主要是Lru最近最少使用淘汰策略，设计上会对key 按失效时间排序，然后取最先失效的key进行淘汰
 
-　　16.redis 最适合的场景　　
+## redis 适用场景　　
 
 Redis最适合所有数据in-momory的场景，虽然Redis也提供持久化功能，但实际更多的是一个disk-backed的功能，跟传统意义上的持久化有比较大的差别，那么可能大家就会有疑问，似乎Redis更像一个加强版的Memcached，那么何时使用Memcached,何时使用Redis呢?
 如果简单地比较Redis与Memcached的区别，大多数都会得到以下观点：
