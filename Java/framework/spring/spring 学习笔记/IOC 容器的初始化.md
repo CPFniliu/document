@@ -215,14 +215,13 @@ refresh(){
 
 ### IOC 容器的注入
 
-
 以来完成之后就是注入的过程了。在IOC容器中的BeanDefinition是怎么注入的呢。
-1.注入由AbstractAutowireCapableBeanFactory中的方法populateBean()方法完成（包括了对autoware属性的处理） 
-2.在该方法中通过BeanDefinitionResolver来对BeanDefinition进行解析，并注入到property中 
-3.至此完成IOC容器的初始化以及依赖注入。 
-注 
-1.具体的BeanWrapper的setPropertyValues. 
-2.在IOC容器初始化完成之后，可以通过lazy-init属性来设置是否立即进行依赖注入。lazy-init属性定义在BeanDefinition中。 
-3.IOC容器的后置监听器BeanPostProcessor. 
-至此是IOC容器的初始化以及依赖注入的过程简单描述。具体细节描述待日后更新。 
+1.注入由AbstractAutowireCapableBeanFactory中的方法populateBean()方法完成（包括了对autoware属性的处理）
+2.在该方法中通过BeanDefinitionResolver来对BeanDefinition进行解析，并注入到property中
+3.至此完成IOC容器的初始化以及依赖注入。
+注
+1.具体的BeanWrapper的setPropertyValues.
+2.在IOC容器初始化完成之后，可以通过lazy-init属性来设置是否立即进行依赖注入。lazy-init属性定义在BeanDefinition中。
+3.IOC容器的后置监听器BeanPostProcessor.
+至此是IOC容器的初始化以及依赖注入的过程简单描述。具体细节描述待日后更新。
 晚安世界。O(∩_∩)O！

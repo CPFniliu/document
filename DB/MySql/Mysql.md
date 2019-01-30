@@ -136,8 +136,8 @@ Id
 table
    查询涉及到的表
    1. 直接显示表名或者表的别名
-   2. <unionM,N>  : 由ID为M,N 查询union产生的结果
-   3. <subqueryN> : 由ID为N查询生产的结果
+   2. \<unionM,N\>  : 由ID为M,N 查询union产生的结果
+   3. \<subqueryN\> : 由ID为N查询生产的结果
 
 possible_keys
    查询过程中有可能用到的索引
@@ -167,7 +167,7 @@ UNION RESULT | 从union表获取结果的select
 type | means
 -|-
 system | 表只有一行记录（等于系统表），const类型的特例，基本不会出现，可以忽略不计
-const | 表示通过索引一次就找到了，const用于比较primary key 或者 unique索引
+const | 表示通过索引一次就找到了，const 用于比较 primary key 或者 unique 索引
 eq_ref | 唯一索引扫描，对于每个索引键，表中只有一条记录与之匹配。常见于主键 或 唯一索引扫描
 ref | 非唯一性索引扫描，返回匹配某个单独值的所有行，本质是也是一种索引访问
 range | 只检索给定范围的行，使用一个索引来选择行
@@ -243,3 +243,5 @@ DB_ROW_ID | 6 | 行标识（隐藏单调自增id）
 4. SELECT
    InnoDB 会根据两个条件来检查每行记录：
    InnoDB只查找 DB_TRX_ID 早于当前事务版本的数据行, 以及 DB_ROLL_PTR 为空或大于当前事务版本的数据行
+
+

@@ -1,5 +1,7 @@
 # VMware
 
+[TOC]
+
 ## linux 相关
 
 ### 安装vmware-tools
