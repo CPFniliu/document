@@ -1,6 +1,13 @@
-### SQL(Structured Query Language)
+# infomation_schema
 
-> MYSQL 中 int 类型和 Integer 类型没有区别。
+```sql
+-- 查询 smp_db 数据库中所有的数据表 INFORMATION_SCHEMA.TABLES
+select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA='smp_db'
+
+-- 查询smp_db数据库中smp_import_db表所有的字段information_schema.`COLUMNS`
+select COLUMN_NAME from information_schema.`COLUMNS` where TABLE_SCHEMA='smp_db' and TABLE_NAME='smp_import_db'
+```
+
 
 ### ALTER
 
