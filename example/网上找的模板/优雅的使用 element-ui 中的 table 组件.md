@@ -1,0 +1,1 @@
+src/main/webapp/WEB-INF/html/assetManagement/transactionLog.html

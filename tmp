@@ -42,17 +42,7 @@ Sync中的nonfairTryAcquire()方法实现
 
 
 
- 
-DELETE ity_user_role, ity_user from ity_user_role INNER JOIN ity_user on ity_user_role.uuid = ity_user.uuid where ity_user.Mobile_Phone = '19951235679';
+mysql
 
-SELECT * from ity_user_role INNER JOIN ity_user on ity_user_role.uuid = ity_user.uuid where ity_user.Mobile_Phone = '19951235679';
-
-
-DELETE FROM ity_user a WHERE a.Mobile_Phone = '19951235679';
-
-
-
-SELECT * from ity_user where Mobile_Phone = '19951235679';
-SELECT * from ity_user_role where uuid in('2019022217335942323856667');
-
-SLEEP(duration)
+Compressed TAR Archive 二进制包安装方式, 即免安装解压运行版
+TAR 安装板
