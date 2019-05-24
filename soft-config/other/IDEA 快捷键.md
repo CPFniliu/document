@@ -1,4 +1,4 @@
-IDEA 快捷键
+# IDEA 快捷键
 
 Ctrl+Shift + Enter，语句完成
 “！”，否定完成，输入表达式时按 “！”键
@@ -66,7 +66,6 @@ Ctrl+I，实现方法
 Ctrl+Shift+U，大小写转化
 Ctrl+Y，删除当前行
 
-
 Shift+Enter，向下插入新行
 psvm/sout，main/System.out.println(); Ctrl+J，查看更多
 Ctrl+Shift+F，全局查找
@@ -132,8 +131,8 @@ Ctrl+Shift+R，在路径中替换
 Ctrl+Shift+S，搜索结构
 Ctrl+Shift+M，替换结构
 
-
 ### 用法
+
 Alt+F7，查找用法
 Ctrl+Alt+F7，显示用法
 Ctrl+F7，在文件中查找用法

@@ -46,3 +46,28 @@ mysql
 
 Compressed TAR Archive 二进制包安装方式, 即免安装解压运行版
 TAR 安装板
+
+
+
+
+一个 destinction 有多种操作, 通过炒作类型
+
+一个操作里面有多个源, 判断源是否存在, 存在则调用响应函数
+
+iframe 子页面获取当前页面src
+
+`window.location.pathname`
+
+父页面获取相关子页面的src
+
+`$('iframe#contentFrame').attr('src')`
+
+```js
+
+cedaClientInfo = new ClientInfo();
+var uul = eval('({"wsUrl":"ws://192.168.2.2:9063","sioUrl":"http://192.168.2.2:9066","forcePolling":false})');
+cedaConnection = new CedaWebSocketConnection(url, cedaClientInfo);
+
+
+```
+
