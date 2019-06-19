@@ -21,3 +21,7 @@ DELETE FROM SCORE WHERE ID NOT IN(
 )
 
 ```
+
+## 如果使用group By进行分组后, 如果组内有任何一条数据满足一个条件的话, 整个组直接过滤掉
+
+## 
