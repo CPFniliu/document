@@ -1,13 +1,3 @@
-AUTO_ACKNOWLEDGE
-
-
-
-
-5.Zookeeper做了什么？
-
-1.命名服务   2.配置管理   3.集群管理   4.分布式锁  5.队列管理
-
-
 
 
  *以下关于子类和父类的到底是几个对象，也就是影响到父类和子类获取的是否是同一个锁（以下解释来自博客 http://blog.csdn.net/aitangyong/article/details/22695399）
@@ -71,3 +61,8 @@ cedaConnection = new CedaWebSocketConnection(url, cedaClientInfo);
 
 ```
 
+
+
+
+
+tip : i同业报 validate 错误可能是应为数据库配置不对， 看下日志

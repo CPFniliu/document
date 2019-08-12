@@ -151,6 +151,7 @@ source  /etc/profile
    rpm方式安装的mysql
 
       a）查看系统中是否以rpm包安装的mysql：
+
       [root@localhost opt]# rpm -qa | grep -i mysql
       MySQL-server-5.6.17-1.el6.i686
       MySQL-client-5.6.17-1.el6.i686
