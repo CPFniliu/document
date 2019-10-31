@@ -1,0 +1,110 @@
+##定义初始变量
+#set($tableName = $tool.append($tableInfo.name, "Impl"))
+##设置回调
+$!callback.setFileName($tool.append($tableName, ".java"))
+##定义路径
+##$!callback.setSavePath($tool.append($tableInfo.savePath, "/service/impl"))
+$!callback.setSavePath($tool.append($projectPath, "/service/src/main/java/ats/ity/service/base/impl"))
+
+##拿到主键
+#if(!$tableInfo.pkColumn.isEmpty())
+    #set($pk = $tableInfo.pkColumn.get(0))
+#end
+
+###if($tableInfo.savePackageName)package $!{tableInfo.savePackageName}.#{end}service.impl;
+package ats.ity.service.base.impl;
+
+import ats.ity.common.dao.basic.$!{tableInfo.name}Mapper;
+import ats.ity.common.model.entity.$!{tableInfo.name};
+import ats.ity.common.model.example.$!{tableInfo.name}Example;
+import ats.ity.service.base.api.I$!{tableInfo.name};
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * $!{tableInfo.comment}($!{tableInfo.name})表服务实现类
+ *
+ * @author $!author
+ * @since $!time.currTime()
+ */
+@Service
+public class $!{tableName} implements I$!{tableInfo.name} {
+    @Resource
+    private $!{tableInfo.name}Mapper $!tool.firstLowerCase($!{tableInfo.name})Mapper;
+#if(!$tableInfo.pkColumn.isEmpty())
+    #foreach($column in $tableInfo.pkColumn)
+        
+    /**
+     * 通过 $!{column.name} 查询单条数据
+     *
+     * @param $!{column.name} $!{column.comment}
+     * @return 实例对象
+     */
+    @Override
+    public $!{tableInfo.name} findByPrimaryKey($column.shortType $!{column.name}) {
+        return $!{tool.firstLowerCase($!{tableInfo.name})}Mapper.selectByPrimaryKey($!{column.name});
+    }
+  #end
+#end
+
+    /**
+     * 查询多条数据
+     *
+     * @param conditionMap 查询条件
+     * @return 对象列表
+     */
+    @Override
+    public List<$!{tableInfo.name}> selectAll(Map<String, Object> conditionMap) {
+        //return $!{tool.firstLowerCase($!{tableInfo.name})}Mapper.selectAllByLimit(offset, limit);
+        return new ArrayList();
+    }
+
+    /**
+     * 查询列表数据
+     *
+     * @param example 查询实例
+     * @return 对象列表
+     */
+    @Override
+    public List<$!{tableInfo.name}> selectByExample($!{tableInfo.name}Example example) {
+        return $!{tool.firstLowerCase($!{tableInfo.name})}Mapper.selectByExample(example);
+    }
+    
+    /**
+     * 新增数据
+     *
+     * @param $!tool.firstLowerCase($!{tableInfo.name}) 实例对象
+     * @return 实例对象
+     */
+    @Override
+    public $!{tableInfo.name} insert($!{tableInfo.name} $!tool.firstLowerCase($!{tableInfo.name})) {
+        $!{tool.firstLowerCase($!{tableInfo.name})}Mapper.insert($!tool.firstLowerCase($!{tableInfo.name}));
+        return $!tool.firstLowerCase($!{tableInfo.name});
+    }
+
+    /**
+     * 修改数据
+     *
+     * @param $!tool.firstLowerCase($!{tableInfo.name}) 实例对象
+     * @return 实例对象
+     */
+    @Override
+    public int updateByPrimaryKey($!{tableInfo.name} $!tool.firstLowerCase($!{tableInfo.name})) {
+        return $!{tool.firstLowerCase($!{tableInfo.name})}Mapper.updateByPrimaryKeySelective($!tool.firstLowerCase($!{tableInfo.name}));
+    }
+
+    /**
+     * 通过主键删除数据
+     *
+     * @param $!pk.name 主键
+     * @return 是否成功
+     */
+    @Override
+    public boolean deleteByPrimaryKey($!pk.shortType $!pk.name) {
+        return $!{tool.firstLowerCase($!{tableInfo.name})}Mapper.deleteByPrimaryKey($!pk.name) > 0;
+    }
+}

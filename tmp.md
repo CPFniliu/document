@@ -57,12 +57,4 @@ iframe 子页面获取当前页面src
 cedaClientInfo = new ClientInfo();
 var uul = eval('({"wsUrl":"ws://192.168.2.2:9063","sioUrl":"http://192.168.2.2:9066","forcePolling":false})');
 cedaConnection = new CedaWebSocketConnection(url, cedaClientInfo);
-
-
 ```
-
-
-
-
-
-tip : i同业报 validate 错误可能是应为数据库配置不对， 看下日志

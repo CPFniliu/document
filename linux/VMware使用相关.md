@@ -47,3 +47,12 @@
 2. 使用VMware workstation设置将共享文件夹添加至虚拟机(虚拟机最好关机)
    VMware workstation --> 右键当前虚拟机设置 --> 选项 --> 共享文件夹
 3. 打开虚拟机, 使用 `ls /mnt/hgfs` 命令看到共享的文件夹.
+
+### [如何快速解决虚拟机中的CentOS7无法上网的方式](http://baijiahao.baidu.com/s?id=1597809303775176940&wfr=spider&for=pc)
+
+1. VM player;
+   1. 设置网络连接方式为net方式,
+   2. 进入虚拟机 执行脚本,
+      `vi /etc/sysconfig/network-scripts/ifcfg-ens33`
+      进入编辑模式，将 ONBOOT=no 改为 ONBOOT=yes
+   3. `service network restart`，回车确认重启network服务！

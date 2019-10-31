@@ -1,0 +1,296 @@
+##定义初始变量
+#set($tableName = $tool.firstLowerCase($tableInfo.name))
+#set($tableText = $tool.firstLowerCase($tableInfo.name))
+#set($gridName = $tool.append($tableName, "Grid"))
+#set($inter = $tool.append("i", $tableInfo.name))
+#set($addModel = $tool.append("add", $tableInfo.name, "Model"))
+#set($editModel = $tool.append("edit", $tableInfo.name, "Model"))
+#set($controllerName = $!{tableName})
+##设置回调
+$!callback.setFileName($tool.append($tableName, ".js"))
+##定义路径
+$!callback.setSavePath($tool.append($projectPath, "/institution/src/main/webapp/etc/page/template"))
+
+##拿到主键
+#if(!$tableInfo.pkColumn.isEmpty())
+    #set($pk = $tableInfo.pkColumn.get(0))
+#end
+
+## search
+#set($searchList = $tool.newArrayList())
+#set($listList = $tool.newArrayList())
+#set($addList = $tool.newArrayList())
+#set($editList = $tool.newArrayList())
+#if(!$tableInfo.fullColumn.isEmpty())
+    #foreach($column in $tableInfo.fullColumn)
+        #if (${column.ext.search})
+            $tool.call($searchList.add($column))
+        #end
+        #if (${column.ext.list})
+            $tool.call($listList.add($column))
+        #end
+        #if (${column.ext.add})
+            $tool.call($addList.add($column))
+        #end
+        #if (${column.ext.edit})
+            $tool.call($editList.add($column))
+        #end
+    #end
+#end
+
+## =========== content ===========
+
+// 用于遮罩
+let mask;
+
+let numberValid=(rule, value,callback)=>{
+    if (value && !(/^\d+$/.test(value))){
+        callback(new Error('请输入纯数字'))
+    }else {
+        callback();
+    }
+};
+
+let vueContent = new Vue({
+    el : '#vue-content',
+    //钩子函数,页面加载执行
+    created: function () {
+        this.refresh();
+    },
+    //钩子函数,页面加载完成后执行
+    mounted: function () {
+    },
+    data: {
+        ${gridName} : {
+            multipleSelection : [],
+            conditions : {
+#foreach($column in $searchList)
+#if ($column.type == "java.lang.String")
+                blur${tool.firstUpperCase($column.name)} : undefined#if($velocityHasNext),#end
+#elseif ($column.type == "java.util.Date")
+                ${tool.firstLowerCase($column.name)}Range : undefined#if($velocityHasNext),#end
+#end
+
+#end
+            },
+            cols : [
+#foreach($column in $listList)
+                { width: '',prop: '${column.name}', label: '${column.ext.text}' },
+#end
+                { width: '', prop: 'id', label: '操作', component : 'cOperate'}
+            ],
+            pretreatment(row) {
+                // row.addTimeText = new Date(row.addTime).format('yyyy-MM-dd hh:mm:ss');
+            },
+            data : [],
+            pagination : {
+                pageNumber: 1,
+                pageSize: 10,
+                total : 0
+            },
+            setTable : function(pageInfo) {
+                if (! pageInfo) {
+                    return;
+                }
+                this.clearTable();
+                if (pageInfo.list) {
+                    pageInfo.list.forEach(item => {
+                        this.pretreatment(item);
+                        this.data.push(item);
+                    });
+                }
+                this.pagination.total = pageInfo.total;
+            },
+            clearTable : function(){
+                if (this.data.length > 0){
+                    this.data.splice(0, this.data.length);
+                }
+            }
+        },
+        $!{addModel} : {
+            dialogVisible : false,
+            form : {
+#foreach($column in $addList)
+                ${column.name}: undefined#if($velocityHasNext),#end
+
+#end
+            },
+            formRule : {
+#foreach($column in $addList)
+                ${column.name}:[
+                    { required: true, message: '请输入${column.ext.text}', trigger: 'change' }
+                ]#if($velocityHasNext),#end
+
+#end
+            },
+            closeAndClear() {
+                this.dialogVisible = false;
+#foreach($column in $addList)
+                this.form.${column.name} = undefined;
+#end
+            },
+            preAddStatus() {
+                this.dialogVisible = true;
+            }
+        },
+        $!{editModel} : {
+            dialogVisible : false,
+            form : {
+#foreach($column in $editList)
+                ${column.name}: undefined#if($velocityHasNext),#end
+
+#end
+            },
+            formRule : {
+#foreach($column in $editList)
+                ${column.name}: [
+                    { required: true, message: '请输入${column.ext.text}', trigger: 'change' }
+                ]#if($velocityHasNext),#end
+
+#end
+            },
+            closeAndClear() {
+                this.dialogVisible = false;
+#foreach($column in $editList)
+                this.form.${column.name} = undefined;
+#end
+            },
+            preEditStatus(record) {
+                this.form.${pk.name} = record.${pk.name};
+#foreach($column in $editList)
+                this.form.${column.name} = record.${column.name};
+#end
+                this.dialogVisible = true;
+            }
+        }
+    },
+    methods: {
+        refresh : function () {
+            let _this = this;
+            let params = jQuery.extend({}, this.$!{gridName}.conditions);
+            params.pageNumber = this.$!{gridName}.pagination.pageNumber;
+            params.pageSize = this.$!{gridName}.pagination.pageSize;
+#foreach($column in $searchList)
+    #if ($column.type == "java.util.Date")
+            if (params.${tool.firstLowerCase($column.name)}Range) {
+                params.${tool.firstLowerCase($column.name)}Min = params.${tool.firstLowerCase($column.name)}Range[0];
+                // 日期类型计算至下一天凌晨
+                params.${tool.firstLowerCase($column.name)}Max = params.${tool.firstLowerCase($column.name)}Range[1] + 86400000;
+                delete params.${tool.firstLowerCase($column.name)}Range;
+            }
+    #end
+#end
+            console.log(params);
+            $.sendPostRequest('${controllerName}/queryPageInfo', params, function (data) {
+                _this.$!{gridName}.setTable(data.pageInfo);
+            }, true);
+        },
+        // 分页
+        handleSizeChange : function (pageSize) {
+            this.$!{gridName}.pagination.pageSize = pageSize;
+            this.refresh();
+        },
+        handleCurrentChange : function (pageNumber) {
+            this.$!{gridName}.pagination.pageNumber = pageNumber;
+            this.refresh();
+        },
+        handleSelectionChange(val) {
+            this.$!{gridName}.multipleSelection = val;
+        },
+        thisCall : function(type, data) {
+            let _this = this;
+            if (type === 'edit') {
+                $.sendPostRequest('${controllerName}/queryOne/' + data, '', (data, status)=>{
+                    _this.$!{editModel}.preEditStatus(data.record);
+                }, true);
+            } else if (type === 'delete') {
+                layer.confirm('确定删除记录吗？', {
+                    btn: ['确定','取消']
+                }, function(index){
+                    layer.close(index);
+                    $.sendPostRequest('${controllerName}/remove', {${pk.name}Arr : [data]}, (data, status)=>{
+                        layer.alert(status.text, {icon: 1});
+                        _this.refresh();
+                    }, true);
+                });
+            }
+        },
+        add${tableInfo.name} : function(){
+            let _this = this;
+            this.$refs ['$!{addModel}.form'].validate ((valid) => {
+                if (valid) {
+                    let formValue = $.extend({}, _this.$!{addModel}.form);
+                    $.sendPostRequest('${controllerName}/add', formValue, function (data, status) {
+                        layer.msg(status.text);
+                        _this.$!{addModel}.closeAndClear();
+                        _this.refresh();
+                    }, true);
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
+        },
+        deleteSelection : function(){
+            if (this.$!{gridName}.multipleSelection.length <= 0) {
+                layer.msg('请选择记录');
+                return;
+            }
+            let _this = this;
+            layer.confirm('确定删除记录吗？', {
+                btn: ['确定','取消']
+            }, function(index){
+                layer.close(index);
+                let params = {
+                    ${pk.name}Arr : _this.$!{gridName}.multipleSelection.map(it=>it.${pk.name})
+                };
+                $.sendPostRequest('${controllerName}/remove', params, (data, status)=>{
+                    layer.alert(status.text, {icon: 1});
+                    _this.refresh();
+                }, true);
+            });
+        },
+        edit${tableInfo.name} : function(){
+            let _this = this;
+            this.$refs ['$!{editModel}.form'].validate ((valid) => {
+                if (valid) {
+                    let formValue = $.extend({}, _this.$!{editModel}.form);
+                    $.sendPostRequest('${controllerName}/edit', formValue, function (data, status) {
+                        layer.msg(status.text);
+                        _this.$!{editModel}.closeAndClear();
+                        _this.refresh();
+                    }, true);
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
+        }
+    },
+    computed: {
+    },
+    components: {
+        cText : {
+            template: "<span>{{row[val] ? row[val] : '--'}}</span>",
+            props: {row:{type: Object, required: true}, val:{type: String}}
+        },
+        cOperate : {
+            template:
+                '<div>' +
+                '<span @click="editRecord" title="编辑" class="fa fa-lg fa-pencil" style="color:black; padding: 0 3px"></span>' +
+                '<span @click="deleteRecord" title="删除" class="fa fa-lg fa-remove" style="color:black; padding: 0 3px"></span>' +
+                '</div>',
+            props: {row:{type: Object, required: true}},
+            methods: {
+                editRecord : function () {
+                    this.$emit('callmethod', 'edit', this.row.${pk.name});
+                },
+                deleteRecord : function () {
+                    this.$emit('callmethod', 'delete', this.row.${pk.name});
+                }
+            }
+        }
+    },
+    watch: {
+    }
+});

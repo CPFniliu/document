@@ -1,0 +1,147 @@
+##定义初始变量
+#set($className = $tool.append($tableInfo.name, "Controller"))
+#set($tableName = $tool.firstLowerCase($tableInfo.name))
+#set($inter = $tool.append("i", $tableInfo.name))
+##设置回调
+$!callback.setFileName($tool.append($className, ".java"))
+##定义路径
+##$!callback.setSavePath($tool.append($tableInfo.savePath, "/service/impl"))
+$!callback.setSavePath($tool.append($projectPath, "/institution/src/main/java/ats/ity/institution/controller"))
+
+##拿到主键
+#if(!$tableInfo.pkColumn.isEmpty())
+    #set($pk = $tableInfo.pkColumn.get(0).getName())
+#end
+
+###if($tableInfo.savePackageName)package $!{tableInfo.savePackageName}.#{end}service.impl;
+package ats.ity.institution.controller;
+
+import ats.ity.common.constant.postcode.ECommonPostCode;
+import ats.ity.common.constant.postcode.EFormPostCode;
+import ats.ity.common.model.base.PostBean;
+import ats.ity.common.model.entity.$!{tableInfo.name};
+import ats.ity.common.model.example.$!{tableInfo.name}Example;
+import ats.ity.common.utils.exception.PostException;
+import ats.ity.common.utils.sql.PagingUtils;
+import ats.ity.service.base.api.I$!{tableInfo.name};
+import com.github.pagehelper.PageInfo;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Map;
+
+/**
+ * <b>Description : </b>
+ *
+ * @author CPF
+ * @date ${time.currTime("yyyy/MM/dd hh:mm")}
+ **/
+@Controller
+public class $!{tableInfo.name}Controller {
+
+    @Autowired
+    I$!{tableInfo.name} $!{inter};
+
+    /**
+     * 查询 $!{tableName} 表分页数据
+     *
+     * @param minSendTime               最小发送时间
+     * @param maxSendTime               最大发送时间
+     * @param pageNumber                页号
+     * @param pageSize                  页面大小
+     */
+    @RequestMapping("/$!{tableName}/queryPageInfo")
+    @ResponseBody
+    public Map<String, Object> query$!{tableInfo.name}PageInfo (HttpServletRequest request,
+                                                       @RequestParam(value = "minSendTime", required = false) Long minSendTime,
+                                                       @RequestParam(value = "maxSendTime", required = false) Long maxSendTime,
+                                                       @RequestParam(value = "pageNumber", defaultValue = "0") int pageNumber,
+                                                       @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+        $!{tableInfo.name}Example example = new $!{tableInfo.name}Example();
+        $!{tableInfo.name}Example.Criteria criteria = example.createCriteria();
+        example.setOrderByClause("update_time desc");
+        // TODO 填写查找条件
+        if (minSendTime != null) {
+            criteria.andUpdateTimeGreaterThanOrEqualTo(new Date(minSendTime));
+        }
+        if (maxSendTime != null) {
+            criteria.andUpdateTimeLessThan(new Date(maxSendTime));
+        }
+        PageInfo<$!{tableInfo.name}> pageInfo = PagingUtils.selectStartPagingInfo(() -> $!{inter}.selectByExample(example), pageNumber, pageSize);
+        // 检查文件参数
+        PostBean postBean = new PostBean();
+        postBean.put("pageInfo", pageInfo);
+        return postBean.toResultMap();
+    }
+
+    /**
+     * 查询一条 $!{tableName} 表数据
+     */
+    @PostMapping("/$!{tableName}/queryOne/{guid}")
+    @ResponseBody
+    public Map<String, Object> query$!{tableInfo.name}One (HttpServletRequest request, @PathVariable("guid") String guid) {
+        final $!{tableInfo.name} record = $!{inter}.findByPrimaryKey(guid);
+        if (record == null) {
+            return PostBean.genePostMap(ECommonPostCode.dataLost);
+        }
+        PostBean postBean = new PostBean();
+        postBean.put("record", record);
+        return postBean.toResultMap();
+    }
+
+    /**
+     * 更新 $!{tableName} 表数据
+     */
+    @PostMapping("/$!{tableName}/edit")
+    @ResponseBody
+    @Transactional(rollbackFor = Exception.class)
+    public Map<String, Object> edit$!{tableInfo.name} (HttpServletRequest request, @ModelAttribute $!{tableInfo.name} record) {
+        String $!{pk} = record.get$!{tool.firstUpperCase($pk)}();
+        if (StringUtils.isBlank($!{pk})) {
+            return PostBean.genePostMap(ECommonPostCode.ILLEGAL_ARGUMENT_EXCEPTION);
+        }
+        record.setUpdateTime(new Date());
+        final int row = $!{inter}.updateByPrimaryKey(record);
+        if (row > 0) {
+            return PostBean.genePostMap();
+        }
+        return PostBean.genePostMap(ECommonPostCode.EXEC_FAILURE);
+
+    }
+
+    /**
+     * 新增一条 $!{tableName} 表数据
+     */
+    @PostMapping("/$!{tableName}/add")
+    @ResponseBody
+    @Transactional(rollbackFor = Exception.class)
+    public Map<String, Object> add$!{tableInfo.name} (@ModelAttribute $!{tableInfo.name} record) {
+        final $!{tableInfo.name} row = $!{inter}.insert(record);
+        if (row == null) {
+            return PostBean.genePostMap(EFormPostCode.insertFailure);
+        }
+        return PostBean.genePostMap(EFormPostCode.insertSuccess);
+    }
+
+    /**
+     * 删除 $!{tableName} 表数据
+     */
+    @PostMapping("/$!{tableName}/remove")
+    @ResponseBody
+    @Transactional(rollbackFor = RuntimeException.class)
+    public Map<String, Object> remove$!{tableInfo.name} (@RequestParam("$!{pk}Arr[]") String[] $!{pk}Arr) {
+        try {
+            Arrays.stream($!{pk}Arr).forEach($!{inter}::deleteByPrimaryKey);
+        } catch (RuntimeException e) {
+            throw new PostException(EFormPostCode.deleteFailure, e);
+        }
+        return PostBean.genePostMap(EFormPostCode.deleteSuccess);
+    }
+
+}

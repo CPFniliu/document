@@ -1,0 +1,201 @@
+##定义初始变量
+#set($tableName = $tool.firstLowerCase($tableInfo.name))
+#set($tableText = $tool.firstLowerCase($tableInfo.name))
+#set($gridName = $tool.append($tableName, "Grid"))
+#set($inter = $tool.append("i", $tableInfo.name))
+#set($addModel = $tool.append("add", $tableInfo.name, "Model"))
+#set($editModel = $tool.append("edit", $tableInfo.name, "Model"))
+##设置回调
+$!callback.setFileName($tool.append($tableName, ".html"))
+##定义路径
+$!callback.setSavePath($tool.append($projectPath, "/institution/src/main/webapp/static/html/template"))
+
+##拿到主键
+#if(!$tableInfo.pkColumn.isEmpty())
+    #set($pk = $tableInfo.pkColumn.get(0))
+#end
+
+## search
+#set($searchList = $tool.newArrayList())
+#set($listList = $tool.newArrayList())
+#set($addList = $tool.newArrayList())
+#set($editList = $tool.newArrayList())
+#if(!$tableInfo.fullColumn.isEmpty())
+    #foreach($column in $tableInfo.fullColumn)
+        #if (${column.ext.search})
+            $tool.call($searchList.add($column))
+        #end
+        #if (${column.ext.list})
+            $tool.call($listList.add($column))
+        #end
+        #if (${column.ext.add})
+            $tool.call($addList.add($column))
+        #end
+        #if (${column.ext.edit})
+            $tool.call($editList.add($column))
+        #end
+    #end
+#end
+
+## =========== content ===========
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>${tableInfo.name}</title>
+    <base href="/">
+    <link rel="stylesheet" href="/etc/frame/element-ui/element.css"/>
+    <link rel="stylesheet" href="/etc/frame/element-ui/element-ity.css" />
+    <link rel="stylesheet" href="/etc/frame/font-awesome/css/font-awesome.min.css"/>
+
+    <script type="text/javascript" src="/etc/frame/jquery/jquery-current.min.js"></script>
+    <script type="text/javascript" src="/etc/js/base/base.js"></script>
+    <script type="text/javascript" src="/etc/js/plugins/layer/layer.js"></script>
+    <script type="text/javascript" src="/etc/js/base/ity-common-utils.js"></script>
+    <script type="text/javascript" src="/etc/js/vue.js"></script>
+    <script type="text/javascript" src="/etc/frame/element-ui/element.js"></script>
+</head>
+
+<body>
+
+<div style="color: white">
+    <div id="vue-content">
+        <!-- search bar -->
+        <div id="searchBar" class="form-horizontal">
+            <div class="row col-sm-12">
+#if(!$searchList.isEmpty())
+#foreach($column in $searchList)
+#set($fund=$velocityCount % 2)
+#if ($fund == 1)
+                <el-row type="flex" class="row-bg">
+#end##
+                    <el-col :span="10">
+                        <el-col :span="8">
+                            <label style="float: right">${column.ext.text} ：</label>
+                        </el-col>
+                        <el-col :span="16">
+                            <template>
+#if ($column.type == "java.lang.String")
+                                <el-input size="small" v-model="${gridName}.conditions.blur${tool.firstUpperCase($column.name)}" autocomplete="off"></el-input>
+#elseif ($column.type == "java.util.Date")
+                                <el-date-picker style="width:100%" align="right" unlink-panels
+                                    start-placeholder="开始日期" end-placeholder="结束日期" range-separator="-"
+                                    v-model="${gridName}.conditions.${tool.firstLowerCase($column.name)}Range"
+                                    type="daterange"
+                                    value-format="timestamp"
+                                    :unlink-panels="true">
+                                </el-date-picker>
+#end
+                            </template>
+                        </el-col>
+                    </el-col>
+#if (!$velocityHasNext && $fund == 1)
+                    <el-col :span="14">
+                    </el-col>
+                </el-row>
+#elseif($fund == 0)
+                    <el-col :span="4">
+                    </el-col>
+                </el-row>
+#end
+#end
+#end
+                <div style="margin: 10px 0;">
+                    <div style="height: 1px;border: solid 1px #474e55;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- toolbar -->
+        <div id="toolBar" class="form-horizontal">
+            <div class="row col-sm-12">
+                <div class="divRow1">
+                    <div class="form-group row">
+                        <el-button size="small" @click="${addModel}.preAddStatus()" type="primary">新增记录</el-button>
+                        <el-button size="small" @click="deleteSelection" type="primary">删除选中记录</el-button>
+                    </div>
+                </div>
+                <div style="margin: 10px 0;">
+                    <div style="height: 1px;border: solid 1px #282c2f;"></div>
+                    <div style="height: 1px;border: solid 1px #474e55;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12" style="width: 100%">
+            <el-table :data="${gridName}.data" :fit="true"
+                      @selection-change="handleSelectionChange"
+                      style="background: center;" stripe style="width: 100%">
+                <template>
+                    <el-table-column type="selection" width="55">
+                    </el-table-column>
+                </template>
+
+                <template v-for="{ width, prop, label, component, render } in ${gridName}.cols">
+                    <el-table-column :show-overflow-tooltip="!component" :width="width" :prop="prop" :label="label">
+                        <template slot-scope="scope">
+                            <component :is="component ? component : 'cText' " :row="scope.row" :val="prop" @callmethod="thisCall"></component>
+                        </template>
+                    </el-table-column>
+                </template>
+            </el-table>
+
+            <div>
+                <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :page-sizes="[10, 20, 30, 50]"
+                        :page-size="${gridName}.pagination.pageSize"
+                        :current-page.sync="${gridName}.pagination.pageNumber"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="${gridName}.pagination.total">
+                </el-pagination>
+            </div>
+        </div>
+
+
+        <el-dialog title="新增 $tableName 记录" :visible.sync="${addModel}.dialogVisible" destroy-on-close>
+            <el-form :model="${addModel}.form" :rules="${addModel}.formRule" ref="${addModel}.form" hide-required-asterisk>
+#if(!$addList.isEmpty())
+    #foreach($column in $addList)
+                <el-form-item label="${column.comment} ：" label-width="120px" prop="${column.name}">
+                    <el-input v-model="${addModel}.form.${column.name}" autocomplete="off" maxlength="11"></el-input>
+                </el-form-item>
+#end
+#end
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="${addModel}.dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="add$tableInfo.name">确 定</el-button>
+            </div>
+        </el-dialog>
+
+
+
+        <!-- edit dialog -->
+        <el-dialog title="修改 $tableName 记录" :visible.sync="${editModel}.dialogVisible" destroy-on-close>
+            <el-form :model="${editModel}.form" :rules="${editModel}.formRule" ref="${editModel}.form" hide-required-asterisk>
+#if(!$editList.isEmpty())
+    #foreach($column in $editList)
+                <el-form-item label="${column.comment} ：" label-width="120px" prop="${column.name}">
+                    <el-input v-model="${editModel}.form.${column.name}" autocomplete="off" maxlength="11"></el-input>
+                </el-form-item>
+#end
+#end
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="${editModel}.dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="edit${tableInfo.name}">保 存</el-button>
+            </div>
+        </el-dialog>
+
+    </div>
+
+</div>
+
+<script type="text/javascript" src="etc/page/template/${tableName}.js"></script>
+
+</body>
+</html>
