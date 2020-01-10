@@ -5,8 +5,9 @@
 前提条件, 可能造成失败的原因
 
    1. 首先jdbc需要加上 `allowMutiQueries=true`
-   2. 确保spring开启了aop支持 
+   2. 确保spring开启了aop支持
         `<aop:config proxy-target-class="true"/>`.
+   3. 注意 : 确保事务能够正常执行.
 
    > 若无此项可能会造成程序能够正常运行但是实际却无法走批量处理, 导致执行特别慢
 
@@ -63,3 +64,12 @@
 方案三
 
 1. 使用mybatis里面的 foreach, 在sql角度上使用批量处理. 这种方式更快, 但没有上面两种方案简单
+2. 在spring事务中不允许手动提交事务
+
+
+
+事务
+
+## 测试数据需要加上防止回滚
+
+`@Rollback(false)`

@@ -197,3 +197,38 @@ create table qq_group_member (
 ) comment 'qq群成员表';
 
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 编译的时候跳过测试
+
+方式1：用命令带上参数
+
+`mvn install -Dmaven.test.skip=true`
+
+方式2：在pom.xml里面配置
+
+```xml
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+```

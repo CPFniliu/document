@@ -53,8 +53,8 @@ iframe 子页面获取当前页面src
 `$('iframe#contentFrame').attr('src')`
 
 ```js
-
 cedaClientInfo = new ClientInfo();
 var uul = eval('({"wsUrl":"ws://192.168.2.2:9063","sioUrl":"http://192.168.2.2:9066","forcePolling":false})');
 cedaConnection = new CedaWebSocketConnection(url, cedaClientInfo);
 ```
+
