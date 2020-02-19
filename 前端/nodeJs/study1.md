@@ -46,7 +46,6 @@ lib | js代码 | 非必需
 doc | 文档 | 非必需
 test | 单元测试 | 非必需
 
-
 ## npm
 
 npm命令 | 作用
@@ -59,6 +58,7 @@ npm install/i 包名 | 安装包
 npm install/i 包名 --save | 安装包并添加到依赖中
 npm install 包名 -g | 全局安装安装包(全局安装的包一般都是一些工具)
 npm install | 下载当前项目的依赖包
+npm install -g npm | 升级npm到最新版本
 
 
 ## Buffer(缓冲区)
